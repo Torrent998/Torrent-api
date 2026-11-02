@@ -81,6 +81,8 @@ describe("api-examples.v1.json", () => {
     idx.transfers.set("77", { transferId: "77", rightId: "5", from: alice.publicKey(), to: bob.publicKey(), expiry: Math.floor(clock.t / 1000) + 3600, status: "Pending", indexerStatus: "SYNCED", latestObservedLedger: 1 });
     await intents.reconcile();
     out["approveTransfer"] = (await http().post(`/v1/transfers/${tr.transfer.id}/approve`).set(B).set("Idempotency-Key", "ex-appr-0001").expect(200)).body;
+    out["listTransfers"] = (await http().get(`/v1/circles/${circle.id}/transfers`).set(B).expect(200)).body;
+    out["listIntents"] = (await http().get(`/v1/circles/${circle.id}/intents`).set(A).expect(200)).body;
     clock.advance(2 * 86400_000);
     const A2 = await login(alice); const B2 = await login(bob); // sessions expire after 12 h
     out["createClaimIntent"] = (await http().post("/v1/rights/5/claim-intent").set(A2).set("Idempotency-Key", "ex-claim-0001").send({}).expect(201)).body;

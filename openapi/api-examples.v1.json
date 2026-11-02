@@ -3,21 +3,21 @@
   "schemaVersion": 1,
   "examples": {
     "authChallenge": {
-      "challengeId": "chal_NfFrjoevywdyIIT4R6e-CA",
-      "message": "Torrent sign-in (Stellar Testnet prototype)\nnetwork: testnet\naddress: GA2G7CSRT7FTWVFFGGYPG7SJDLI3OLQG3SCNFUJ6DUL25GFWES7C7TU5\nnonce: 6ULlHyTRmWqaOGkC57ZZZ6ChsS0LPfZzjjcmbxo_53I\nissued: 2026-03-01T00:00:00.000Z\nexpires: 2026-03-01T00:05:00.000Z\nSigning proves you control this address. It does not authorize any payment.",
+      "challengeId": "chal_nbur6pT3wY198Uxll0ZOsg",
+      "message": "Torrent sign-in (Stellar Testnet prototype)\nnetwork: testnet\naddress: GDTFNS3BYMAAZQZFPEJUFGXWGXXSQ7P25MH6XEZQMCPQ773XIIH44X3M\nnonce: 70bnfuz6-gqXjf7okgTM3JDqG9p3lkBH_CJMaJt8mUM\nissued: 2026-03-01T00:00:00.000Z\nexpires: 2026-03-01T00:05:00.000Z\nSigning proves you control this address. It does not authorize any payment.",
       "expiresAt": "2026-03-01T00:05:00.000Z"
     },
     "authLogin": {
-      "token": "Me8AUxj6P1OKSk4VL7UXS4qTZ6935jsheVzwAfDgtJc",
+      "token": "4Mvub7DA8Hf8ZFKRM3jmpT1eoFfzyqcqGuoUd33HFko",
       "expiresAt": "2026-03-01T12:00:00.000Z",
-      "userId": "usr_ea21ac56b0088c910ccb6da1",
-      "address": "GA2G7CSRT7FTWVFFGGYPG7SJDLI3OLQG3SCNFUJ6DUL25GFWES7C7TU5",
+      "userId": "usr_ea8c756d017aa2669807f0fe",
+      "address": "GDTFNS3BYMAAZQZFPEJUFGXWGXXSQ7P25MH6XEZQMCPQ773XIIH44X3M",
       "roles": [
         "user"
       ]
     },
     "createCircle": {
-      "id": "cir_VObNDeH_mv1GyFka0fzHhA",
+      "id": "cir_5a0GWix5_gdaNf73lRCn1g",
       "name": "Ajo",
       "ruleSet": {
         "tokenContractId": "CAEQSCIJBEEQSCIJBEEQSCIJBEEQSCIJBEEQSCIJBEEQSCIJBEEQTD2L",
@@ -29,10 +29,10 @@
       },
       "policyHash": "7272969df90dacd6781c3cfd5c7af0f912ee712bfc686e971f75722540c18f6a",
       "poolId": null,
-      "organizerAddress": "GA2G7CSRT7FTWVFFGGYPG7SJDLI3OLQG3SCNFUJ6DUL25GFWES7C7TU5",
+      "organizerAddress": "GDTFNS3BYMAAZQZFPEJUFGXWGXXSQ7P25MH6XEZQMCPQ773XIIH44X3M",
       "members": [
         {
-          "address": "GA2G7CSRT7FTWVFFGGYPG7SJDLI3OLQG3SCNFUJ6DUL25GFWES7C7TU5",
+          "address": "GDTFNS3BYMAAZQZFPEJUFGXWGXXSQ7P25MH6XEZQMCPQ773XIIH44X3M",
           "role": "ORGANIZER",
           "joinedAt": "2026-03-01T00:00:00.000Z"
         }
@@ -42,15 +42,15 @@
     },
     "createInvitation": {
       "invitation": {
-        "id": "inv_EeDeRLn2KCusVKJICq3tqQ",
+        "id": "inv_2Gyd_Mg_dcuW2AEjPjsGDQ",
         "label": "bob",
         "status": "PENDING",
         "expiresAt": "2026-03-02T00:00:00.000Z"
       },
-      "token": "M4HKnH0RUKR89TBRVkjBP4t996xHDSqlrNQ10DAAoC8"
+      "token": "WVTOSMdVKXZN3S4r3jsIAiUu1yu92mCneSiMWn0l2tk"
     },
     "acceptInvitation": {
-      "id": "cir_VObNDeH_mv1GyFka0fzHhA",
+      "id": "cir_5a0GWix5_gdaNf73lRCn1g",
       "name": "Ajo",
       "ruleSet": {
         "tokenContractId": "CAEQSCIJBEEQSCIJBEEQSCIJBEEQSCIJBEEQSCIJBEEQSCIJBEEQTD2L",
@@ -62,15 +62,15 @@
       },
       "policyHash": "7272969df90dacd6781c3cfd5c7af0f912ee712bfc686e971f75722540c18f6a",
       "poolId": null,
-      "organizerAddress": "GA2G7CSRT7FTWVFFGGYPG7SJDLI3OLQG3SCNFUJ6DUL25GFWES7C7TU5",
+      "organizerAddress": "GDTFNS3BYMAAZQZFPEJUFGXWGXXSQ7P25MH6XEZQMCPQ773XIIH44X3M",
       "members": [
         {
-          "address": "GA2G7CSRT7FTWVFFGGYPG7SJDLI3OLQG3SCNFUJ6DUL25GFWES7C7TU5",
+          "address": "GDTFNS3BYMAAZQZFPEJUFGXWGXXSQ7P25MH6XEZQMCPQ773XIIH44X3M",
           "role": "ORGANIZER",
           "joinedAt": "2026-03-01T00:00:00.000Z"
         },
         {
-          "address": "GA3Y4RMDC2FB2CE4P3L67HP3BEMK63XAT2NN3UAJMP7YYPOUDUNVKWE7",
+          "address": "GBJZLXQKDWDQ2E5P4K4PVGSQLI35F4HAIZ2D2FF7E6W2LYFGNQRIVWDJ",
           "role": "MEMBER",
           "joinedAt": "2026-03-01T00:00:00.000Z"
         }
@@ -79,7 +79,7 @@
       "updatedAt": "2026-03-01T00:00:00.000Z"
     },
     "getCircle": {
-      "id": "cir_VObNDeH_mv1GyFka0fzHhA",
+      "id": "cir_5a0GWix5_gdaNf73lRCn1g",
       "name": "Ajo",
       "ruleSet": {
         "tokenContractId": "CAEQSCIJBEEQSCIJBEEQSCIJBEEQSCIJBEEQSCIJBEEQSCIJBEEQTD2L",
@@ -91,15 +91,15 @@
       },
       "policyHash": "7272969df90dacd6781c3cfd5c7af0f912ee712bfc686e971f75722540c18f6a",
       "poolId": "1",
-      "organizerAddress": "GA2G7CSRT7FTWVFFGGYPG7SJDLI3OLQG3SCNFUJ6DUL25GFWES7C7TU5",
+      "organizerAddress": "GDTFNS3BYMAAZQZFPEJUFGXWGXXSQ7P25MH6XEZQMCPQ773XIIH44X3M",
       "members": [
         {
-          "address": "GA2G7CSRT7FTWVFFGGYPG7SJDLI3OLQG3SCNFUJ6DUL25GFWES7C7TU5",
+          "address": "GDTFNS3BYMAAZQZFPEJUFGXWGXXSQ7P25MH6XEZQMCPQ773XIIH44X3M",
           "role": "ORGANIZER",
           "joinedAt": "2026-03-01T00:00:00.000Z"
         },
         {
-          "address": "GA3Y4RMDC2FB2CE4P3L67HP3BEMK63XAT2NN3UAJMP7YYPOUDUNVKWE7",
+          "address": "GBJZLXQKDWDQ2E5P4K4PVGSQLI35F4HAIZ2D2FF7E6W2LYFGNQRIVWDJ",
           "role": "MEMBER",
           "joinedAt": "2026-03-01T00:00:00.000Z"
         }
@@ -110,7 +110,7 @@
     "listCircles": {
       "circles": [
         {
-          "id": "cir_VObNDeH_mv1GyFka0fzHhA",
+          "id": "cir_5a0GWix5_gdaNf73lRCn1g",
           "name": "Ajo",
           "ruleSet": {
             "tokenContractId": "CAEQSCIJBEEQSCIJBEEQSCIJBEEQSCIJBEEQSCIJBEEQSCIJBEEQTD2L",
@@ -122,15 +122,15 @@
           },
           "policyHash": "7272969df90dacd6781c3cfd5c7af0f912ee712bfc686e971f75722540c18f6a",
           "poolId": "1",
-          "organizerAddress": "GA2G7CSRT7FTWVFFGGYPG7SJDLI3OLQG3SCNFUJ6DUL25GFWES7C7TU5",
+          "organizerAddress": "GDTFNS3BYMAAZQZFPEJUFGXWGXXSQ7P25MH6XEZQMCPQ773XIIH44X3M",
           "members": [
             {
-              "address": "GA2G7CSRT7FTWVFFGGYPG7SJDLI3OLQG3SCNFUJ6DUL25GFWES7C7TU5",
+              "address": "GDTFNS3BYMAAZQZFPEJUFGXWGXXSQ7P25MH6XEZQMCPQ773XIIH44X3M",
               "role": "ORGANIZER",
               "joinedAt": "2026-03-01T00:00:00.000Z"
             },
             {
-              "address": "GA3Y4RMDC2FB2CE4P3L67HP3BEMK63XAT2NN3UAJMP7YYPOUDUNVKWE7",
+              "address": "GBJZLXQKDWDQ2E5P4K4PVGSQLI35F4HAIZ2D2FF7E6W2LYFGNQRIVWDJ",
               "role": "MEMBER",
               "joinedAt": "2026-03-01T00:00:00.000Z"
             }
@@ -141,11 +141,11 @@
       ]
     },
     "createFundingIntent": {
-      "id": "int_Ri3HDkHNv7WHrN4_MTB-sA",
+      "id": "int_t7OHxDk2tlIb6E19fuMSBQ",
       "schemaVersion": 1,
-      "requestId": "req_c1cf60db-611f-48db-8bee-556d8ce49f26",
+      "requestId": "req_5f2d6331-ba90-4bd3-ad1e-89121370f44d",
       "kind": "FUNDING",
-      "circleId": "cir_VObNDeH_mv1GyFka0fzHhA",
+      "circleId": "cir_5a0GWix5_gdaNf73lRCn1g",
       "state": "AWAITING_SIGNATURE",
       "descriptor": {
         "contractId": "CADQOBYHA4DQOBYHA4DQOBYHA4DQOBYHA4DQOBYHA4DQOBYHA4DQP5KR",
@@ -159,7 +159,7 @@
           {
             "name": "from",
             "type": "address",
-            "value": "GA2G7CSRT7FTWVFFGGYPG7SJDLI3OLQG3SCNFUJ6DUL25GFWES7C7TU5"
+            "value": "GDTFNS3BYMAAZQZFPEJUFGXWGXXSQ7P25MH6XEZQMCPQ773XIIH44X3M"
           },
           {
             "name": "amount",
@@ -176,11 +176,11 @@
       "updatedAt": "2026-03-01T00:00:00.000Z"
     },
     "getIntent": {
-      "id": "int_Ri3HDkHNv7WHrN4_MTB-sA",
+      "id": "int_t7OHxDk2tlIb6E19fuMSBQ",
       "schemaVersion": 1,
-      "requestId": "req_c1cf60db-611f-48db-8bee-556d8ce49f26",
+      "requestId": "req_5f2d6331-ba90-4bd3-ad1e-89121370f44d",
       "kind": "FUNDING",
-      "circleId": "cir_VObNDeH_mv1GyFka0fzHhA",
+      "circleId": "cir_5a0GWix5_gdaNf73lRCn1g",
       "state": "AWAITING_SIGNATURE",
       "descriptor": {
         "contractId": "CADQOBYHA4DQOBYHA4DQOBYHA4DQOBYHA4DQOBYHA4DQOBYHA4DQP5KR",
@@ -194,7 +194,7 @@
           {
             "name": "from",
             "type": "address",
-            "value": "GA2G7CSRT7FTWVFFGGYPG7SJDLI3OLQG3SCNFUJ6DUL25GFWES7C7TU5"
+            "value": "GDTFNS3BYMAAZQZFPEJUFGXWGXXSQ7P25MH6XEZQMCPQ773XIIH44X3M"
           },
           {
             "name": "amount",
@@ -212,11 +212,11 @@
     },
     "submitIntent": {
       "intent": {
-        "id": "int_Ri3HDkHNv7WHrN4_MTB-sA",
+        "id": "int_t7OHxDk2tlIb6E19fuMSBQ",
         "schemaVersion": 1,
-        "requestId": "req_c1cf60db-611f-48db-8bee-556d8ce49f26",
+        "requestId": "req_5f2d6331-ba90-4bd3-ad1e-89121370f44d",
         "kind": "FUNDING",
-        "circleId": "cir_VObNDeH_mv1GyFka0fzHhA",
+        "circleId": "cir_5a0GWix5_gdaNf73lRCn1g",
         "state": "SUBMITTED",
         "descriptor": {
           "contractId": "CADQOBYHA4DQOBYHA4DQOBYHA4DQOBYHA4DQOBYHA4DQOBYHA4DQP5KR",
@@ -230,7 +230,7 @@
             {
               "name": "from",
               "type": "address",
-              "value": "GA2G7CSRT7FTWVFFGGYPG7SJDLI3OLQG3SCNFUJ6DUL25GFWES7C7TU5"
+              "value": "GDTFNS3BYMAAZQZFPEJUFGXWGXXSQ7P25MH6XEZQMCPQ773XIIH44X3M"
             },
             {
               "name": "amount",
@@ -239,7 +239,7 @@
             }
           ]
         },
-        "txHash": "bd0a6f482167876ca08def598273fa3a40805e8b9aa2bfcd18c7b4cf9e62866f",
+        "txHash": "a69786c3c196f7221bd57f7afac1d2824d3d80ae7102dc5d9dcc318dc20105ed",
         "failureReason": null,
         "verifiedAtLedger": 1000,
         "expiresAt": "2026-03-01T00:15:00.000Z",
@@ -248,7 +248,7 @@
       }
     },
     "getCoverage": {
-      "circleId": "cir_VObNDeH_mv1GyFka0fzHhA",
+      "circleId": "cir_5a0GWix5_gdaNf73lRCn1g",
       "bound": true,
       "poolId": "1",
       "totals": {
@@ -266,7 +266,7 @@
       "observedAt": "2026-03-01T00:00:00.000Z"
     },
     "listRights": {
-      "circleId": "cir_VObNDeH_mv1GyFka0fzHhA",
+      "circleId": "cir_5a0GWix5_gdaNf73lRCn1g",
       "bound": true,
       "indexerStatus": "SYNCED",
       "asOfLedger": 1000,
@@ -280,29 +280,29 @@
           "claimedAtLedger": null,
           "rightId": "5",
           "poolId": "1",
-          "owner": "GA2G7CSRT7FTWVFFGGYPG7SJDLI3OLQG3SCNFUJ6DUL25GFWES7C7TU5"
+          "owner": "GDTFNS3BYMAAZQZFPEJUFGXWGXXSQ7P25MH6XEZQMCPQ773XIIH44X3M"
         }
       ]
     },
     "createTransferIntent": {
       "transfer": {
-        "id": "trf_iMhxKgsE1uytL6wi1PscqA",
-        "circleId": "cir_VObNDeH_mv1GyFka0fzHhA",
+        "id": "trf_YD0Quy8nRy1KCJhfHc_1Sg",
+        "circleId": "cir_5a0GWix5_gdaNf73lRCn1g",
         "rightId": "5",
-        "from": "GA2G7CSRT7FTWVFFGGYPG7SJDLI3OLQG3SCNFUJ6DUL25GFWES7C7TU5",
-        "to": "GA3Y4RMDC2FB2CE4P3L67HP3BEMK63XAT2NN3UAJMP7YYPOUDUNVKWE7",
+        "from": "GDTFNS3BYMAAZQZFPEJUFGXWGXXSQ7P25MH6XEZQMCPQ773XIIH44X3M",
+        "to": "GBJZLXQKDWDQ2E5P4K4PVGSQLI35F4HAIZ2D2FF7E6W2LYFGNQRIVWDJ",
         "expiresAt": "2026-03-01T01:00:00.000Z",
-        "proposeIntentId": "int_D_9_sjSeXtgqeYz_GsGL7w",
+        "proposeIntentId": "int_BVhJukebzh2_wJz8jKZOzw",
         "acceptIntentId": null,
         "chainTransferId": null,
         "createdAt": "2026-03-01T00:00:00.000Z"
       },
       "intent": {
-        "id": "int_D_9_sjSeXtgqeYz_GsGL7w",
+        "id": "int_BVhJukebzh2_wJz8jKZOzw",
         "schemaVersion": 1,
-        "requestId": "req_1dff91ba-462a-4531-b6e1-d14b30675872",
+        "requestId": "req_ecdf0a4f-8192-4b64-8ae8-05d01824650e",
         "kind": "TRANSFER_PROPOSE",
-        "circleId": "cir_VObNDeH_mv1GyFka0fzHhA",
+        "circleId": "cir_5a0GWix5_gdaNf73lRCn1g",
         "state": "AWAITING_SIGNATURE",
         "descriptor": {
           "contractId": "CADQOBYHA4DQOBYHA4DQOBYHA4DQOBYHA4DQOBYHA4DQOBYHA4DQP5KR",
@@ -316,7 +316,7 @@
             {
               "name": "new_owner",
               "type": "address",
-              "value": "GA3Y4RMDC2FB2CE4P3L67HP3BEMK63XAT2NN3UAJMP7YYPOUDUNVKWE7"
+              "value": "GBJZLXQKDWDQ2E5P4K4PVGSQLI35F4HAIZ2D2FF7E6W2LYFGNQRIVWDJ"
             },
             {
               "name": "expiry",
@@ -335,11 +335,11 @@
     },
     "submitTransfer": {
       "intent": {
-        "id": "int_D_9_sjSeXtgqeYz_GsGL7w",
+        "id": "int_BVhJukebzh2_wJz8jKZOzw",
         "schemaVersion": 1,
-        "requestId": "req_1dff91ba-462a-4531-b6e1-d14b30675872",
+        "requestId": "req_ecdf0a4f-8192-4b64-8ae8-05d01824650e",
         "kind": "TRANSFER_PROPOSE",
-        "circleId": "cir_VObNDeH_mv1GyFka0fzHhA",
+        "circleId": "cir_5a0GWix5_gdaNf73lRCn1g",
         "state": "SUBMITTED",
         "descriptor": {
           "contractId": "CADQOBYHA4DQOBYHA4DQOBYHA4DQOBYHA4DQOBYHA4DQOBYHA4DQP5KR",
@@ -353,7 +353,7 @@
             {
               "name": "new_owner",
               "type": "address",
-              "value": "GA3Y4RMDC2FB2CE4P3L67HP3BEMK63XAT2NN3UAJMP7YYPOUDUNVKWE7"
+              "value": "GBJZLXQKDWDQ2E5P4K4PVGSQLI35F4HAIZ2D2FF7E6W2LYFGNQRIVWDJ"
             },
             {
               "name": "expiry",
@@ -362,7 +362,7 @@
             }
           ]
         },
-        "txHash": "a533ba97a877491796757496c6727990af07bf408f009b804f267fff99d9e4f0",
+        "txHash": "466ab625f4ef4b27ca5f943601941557a40af5d32c12d51084001d68d2c7bbc0",
         "failureReason": null,
         "verifiedAtLedger": 1000,
         "expiresAt": "2026-03-01T00:15:00.000Z",
@@ -372,23 +372,23 @@
     },
     "approveTransfer": {
       "transfer": {
-        "id": "trf_iMhxKgsE1uytL6wi1PscqA",
-        "circleId": "cir_VObNDeH_mv1GyFka0fzHhA",
+        "id": "trf_YD0Quy8nRy1KCJhfHc_1Sg",
+        "circleId": "cir_5a0GWix5_gdaNf73lRCn1g",
         "rightId": "5",
-        "from": "GA2G7CSRT7FTWVFFGGYPG7SJDLI3OLQG3SCNFUJ6DUL25GFWES7C7TU5",
-        "to": "GA3Y4RMDC2FB2CE4P3L67HP3BEMK63XAT2NN3UAJMP7YYPOUDUNVKWE7",
+        "from": "GDTFNS3BYMAAZQZFPEJUFGXWGXXSQ7P25MH6XEZQMCPQ773XIIH44X3M",
+        "to": "GBJZLXQKDWDQ2E5P4K4PVGSQLI35F4HAIZ2D2FF7E6W2LYFGNQRIVWDJ",
         "expiresAt": "2026-03-01T01:00:00.000Z",
-        "proposeIntentId": "int_D_9_sjSeXtgqeYz_GsGL7w",
-        "acceptIntentId": "int_ISNL4RXZJck8cpbWK7rJxQ",
+        "proposeIntentId": "int_BVhJukebzh2_wJz8jKZOzw",
+        "acceptIntentId": "int_evWG1m6cS9_b9R63wi2OAg",
         "chainTransferId": "77",
         "createdAt": "2026-03-01T00:00:00.000Z"
       },
       "intent": {
-        "id": "int_ISNL4RXZJck8cpbWK7rJxQ",
+        "id": "int_evWG1m6cS9_b9R63wi2OAg",
         "schemaVersion": 1,
-        "requestId": "req_34069663-f6c2-4ba5-9369-f7a49358c674",
+        "requestId": "req_fe07b2fc-95c1-4373-993a-253b4aa81978",
         "kind": "TRANSFER_ACCEPT",
-        "circleId": "cir_VObNDeH_mv1GyFka0fzHhA",
+        "circleId": "cir_5a0GWix5_gdaNf73lRCn1g",
         "state": "AWAITING_SIGNATURE",
         "descriptor": {
           "contractId": "CADQOBYHA4DQOBYHA4DQOBYHA4DQOBYHA4DQOBYHA4DQOBYHA4DQP5KR",
@@ -409,13 +409,104 @@
         "updatedAt": "2026-03-01T00:00:00.000Z"
       }
     },
+    "listTransfers": {
+      "transfers": [
+        {
+          "id": "trf_YD0Quy8nRy1KCJhfHc_1Sg",
+          "circleId": "cir_5a0GWix5_gdaNf73lRCn1g",
+          "rightId": "5",
+          "from": "GDTFNS3BYMAAZQZFPEJUFGXWGXXSQ7P25MH6XEZQMCPQ773XIIH44X3M",
+          "to": "GBJZLXQKDWDQ2E5P4K4PVGSQLI35F4HAIZ2D2FF7E6W2LYFGNQRIVWDJ",
+          "expiresAt": "2026-03-01T01:00:00.000Z",
+          "proposeIntentId": "int_BVhJukebzh2_wJz8jKZOzw",
+          "acceptIntentId": "int_evWG1m6cS9_b9R63wi2OAg",
+          "chainTransferId": "77",
+          "createdAt": "2026-03-01T00:00:00.000Z",
+          "status": "ACCEPTING"
+        }
+      ]
+    },
+    "listIntents": {
+      "intents": [
+        {
+          "id": "int_t7OHxDk2tlIb6E19fuMSBQ",
+          "schemaVersion": 1,
+          "requestId": "req_5f2d6331-ba90-4bd3-ad1e-89121370f44d",
+          "kind": "FUNDING",
+          "circleId": "cir_5a0GWix5_gdaNf73lRCn1g",
+          "state": "CONFIRMED",
+          "descriptor": {
+            "contractId": "CADQOBYHA4DQOBYHA4DQOBYHA4DQOBYHA4DQOBYHA4DQOBYHA4DQP5KR",
+            "function": "deposit",
+            "args": [
+              {
+                "name": "pool_id",
+                "type": "u64",
+                "value": "1"
+              },
+              {
+                "name": "from",
+                "type": "address",
+                "value": "GDTFNS3BYMAAZQZFPEJUFGXWGXXSQ7P25MH6XEZQMCPQ773XIIH44X3M"
+              },
+              {
+                "name": "amount",
+                "type": "i128",
+                "value": "10000000000"
+              }
+            ]
+          },
+          "txHash": "a69786c3c196f7221bd57f7afac1d2824d3d80ae7102dc5d9dcc318dc20105ed",
+          "failureReason": null,
+          "verifiedAtLedger": 1000,
+          "expiresAt": "2026-03-01T00:15:00.000Z",
+          "createdAt": "2026-03-01T00:00:00.000Z",
+          "updatedAt": "2026-03-01T00:00:00.000Z"
+        },
+        {
+          "id": "int_BVhJukebzh2_wJz8jKZOzw",
+          "schemaVersion": 1,
+          "requestId": "req_ecdf0a4f-8192-4b64-8ae8-05d01824650e",
+          "kind": "TRANSFER_PROPOSE",
+          "circleId": "cir_5a0GWix5_gdaNf73lRCn1g",
+          "state": "CONFIRMED",
+          "descriptor": {
+            "contractId": "CADQOBYHA4DQOBYHA4DQOBYHA4DQOBYHA4DQOBYHA4DQOBYHA4DQP5KR",
+            "function": "propose_transfer",
+            "args": [
+              {
+                "name": "right_id",
+                "type": "u64",
+                "value": "5"
+              },
+              {
+                "name": "new_owner",
+                "type": "address",
+                "value": "GBJZLXQKDWDQ2E5P4K4PVGSQLI35F4HAIZ2D2FF7E6W2LYFGNQRIVWDJ"
+              },
+              {
+                "name": "expiry",
+                "type": "u64",
+                "value": "1772326800"
+              }
+            ]
+          },
+          "txHash": "466ab625f4ef4b27ca5f943601941557a40af5d32c12d51084001d68d2c7bbc0",
+          "failureReason": null,
+          "verifiedAtLedger": 1000,
+          "expiresAt": "2026-03-01T00:15:00.000Z",
+          "createdAt": "2026-03-01T00:00:00.000Z",
+          "updatedAt": "2026-03-01T00:00:00.000Z"
+        }
+      ]
+    },
     "createClaimIntent": {
       "intent": {
-        "id": "int_YqodqCAmp_e_WurXa2TPtQ",
+        "id": "int_Usylc7wvkV_Do35rU-gsMw",
         "schemaVersion": 1,
-        "requestId": "req_72677766-f368-4ad3-b047-049e944bb0a6",
+        "requestId": "req_81ef2cc5-f6cb-4f26-b43d-7304e2229c77",
         "kind": "CLAIM",
-        "circleId": "cir_VObNDeH_mv1GyFka0fzHhA",
+        "circleId": "cir_5a0GWix5_gdaNf73lRCn1g",
         "state": "AWAITING_SIGNATURE",
         "descriptor": {
           "contractId": "CADQOBYHA4DQOBYHA4DQOBYHA4DQOBYHA4DQOBYHA4DQOBYHA4DQP5KR",
@@ -429,7 +520,7 @@
             {
               "name": "recipient",
               "type": "address",
-              "value": "GA2G7CSRT7FTWVFFGGYPG7SJDLI3OLQG3SCNFUJ6DUL25GFWES7C7TU5"
+              "value": "GDTFNS3BYMAAZQZFPEJUFGXWGXXSQ7P25MH6XEZQMCPQ773XIIH44X3M"
             }
           ]
         },
@@ -456,7 +547,7 @@
             "poolId": "1"
           },
           "data": {
-            "controller": "GA2G7CSRT7FTWVFFGGYPG7SJDLI3OLQG3SCNFUJ6DUL25GFWES7C7TU5",
+            "controller": "GDTFNS3BYMAAZQZFPEJUFGXWGXXSQ7P25MH6XEZQMCPQ773XIIH44X3M",
             "token": "CAEQSCIJBEEQSCIJBEEQSCIJBEEQSCIJBEEQSCIJBEEQSCIJBEEQTD2L",
             "membership_policy_hash": "7272969df90dacd6781c3cfd5c7af0f912ee712bfc686e971f75722540c18f6a",
             "start_ledger": "1"
@@ -467,7 +558,7 @@
           "id": "0000000000000000002-0000000000",
           "ledger": 902,
           "ledgerClosedAt": "2026-03-01T00:00:00.000Z",
-          "txHash": "bd0a6f482167876ca08def598273fa3a40805e8b9aa2bfcd18c7b4cf9e62866f",
+          "txHash": "a69786c3c196f7221bd57f7afac1d2824d3d80ae7102dc5d9dcc318dc20105ed",
           "contractId": "CADQOBYHA4DQOBYHA4DQOBYHA4DQOBYHA4DQOBYHA4DQOBYHA4DQP5KR",
           "name": "funded",
           "refs": {
@@ -482,7 +573,7 @@
           "id": "0000000000000000003-0000000000",
           "ledger": 903,
           "ledgerClosedAt": "2026-03-01T00:00:00.000Z",
-          "txHash": "a533ba97a877491796757496c6727990af07bf408f009b804f267fff99d9e4f0",
+          "txHash": "466ab625f4ef4b27ca5f943601941557a40af5d32c12d51084001d68d2c7bbc0",
           "contractId": "CADQOBYHA4DQOBYHA4DQOBYHA4DQOBYHA4DQOBYHA4DQOBYHA4DQP5KR",
           "name": "transfer_proposed",
           "refs": {
@@ -499,115 +590,115 @@
     "circleAudit": {
       "events": [
         {
-          "id": "aud_hVpmIXA2Nu4uf9Ua4z9khQ",
+          "id": "aud_95BJts5UJ8dfcCA5AU9fYw",
           "at": "2026-03-01T00:00:00.000Z",
-          "actor": "usr_ea21ac56b0088c910ccb6da1",
-          "scope": "circle:cir_VObNDeH_mv1GyFka0fzHhA",
+          "actor": "usr_ea8c756d017aa2669807f0fe",
+          "scope": "circle:cir_5a0GWix5_gdaNf73lRCn1g",
           "action": "circle.create",
-          "object": "cir_VObNDeH_mv1GyFka0fzHhA",
-          "requestId": "req_a05d8d19-4fd5-429e-a96d-88baa2f88a92"
+          "object": "cir_5a0GWix5_gdaNf73lRCn1g",
+          "requestId": "req_2297b4fe-5728-4d72-a462-f0f9140ed6ed"
         },
         {
-          "id": "aud_lUijEohGuYnhY_mWJ2m65A",
+          "id": "aud_0aou4UomixBLYbTqPjYEoA",
           "at": "2026-03-01T00:00:00.000Z",
-          "actor": "usr_ea21ac56b0088c910ccb6da1",
-          "scope": "circle:cir_VObNDeH_mv1GyFka0fzHhA",
+          "actor": "usr_ea8c756d017aa2669807f0fe",
+          "scope": "circle:cir_5a0GWix5_gdaNf73lRCn1g",
           "action": "invitation.create",
-          "object": "inv_EeDeRLn2KCusVKJICq3tqQ",
-          "requestId": "req_84c2b121-963e-492d-9127-fa5fb19927d6"
+          "object": "inv_2Gyd_Mg_dcuW2AEjPjsGDQ",
+          "requestId": "req_0fff9a34-dda3-4de7-b9d8-ba114ac0e8a9"
         },
         {
-          "id": "aud_aCvBc5h6zdB1ZCP5mxaqZw",
+          "id": "aud_S9N13c3KXtTnys7L-rpl2w",
           "at": "2026-03-01T00:00:00.000Z",
-          "actor": "usr_5e04a9ecee1cc48d12625166",
-          "scope": "circle:cir_VObNDeH_mv1GyFka0fzHhA",
+          "actor": "usr_f5839f417f6023147c8d9a2e",
+          "scope": "circle:cir_5a0GWix5_gdaNf73lRCn1g",
           "action": "invitation.accept",
-          "object": "inv_EeDeRLn2KCusVKJICq3tqQ",
-          "requestId": "req_dc42b851-0cc6-4336-83bd-b7e062ad22cb"
+          "object": "inv_2Gyd_Mg_dcuW2AEjPjsGDQ",
+          "requestId": "req_fe2fa755-27ed-4739-ab1e-4477657969aa"
         },
         {
-          "id": "aud__2Un-NI85p8wg1L748MWGA",
+          "id": "aud_BEJBTfDhZaYvjlTZXPzg8Q",
           "at": "2026-03-01T00:00:00.000Z",
           "actor": "system",
-          "scope": "circle:cir_VObNDeH_mv1GyFka0fzHhA",
+          "scope": "circle:cir_5a0GWix5_gdaNf73lRCn1g",
           "action": "pool.bind",
           "object": "1",
           "requestId": "sync"
         },
         {
-          "id": "aud_qSHIWg20Ev2kS_fAV3Ornw",
+          "id": "aud_QKAcyAG5orTv3UodnVZQew",
           "at": "2026-03-01T00:00:00.000Z",
-          "actor": "usr_ea21ac56b0088c910ccb6da1",
-          "scope": "circle:cir_VObNDeH_mv1GyFka0fzHhA",
+          "actor": "usr_ea8c756d017aa2669807f0fe",
+          "scope": "circle:cir_5a0GWix5_gdaNf73lRCn1g",
           "action": "intent.create.FUNDING",
-          "object": "int_Ri3HDkHNv7WHrN4_MTB-sA",
-          "requestId": "req_c1cf60db-611f-48db-8bee-556d8ce49f26"
+          "object": "int_t7OHxDk2tlIb6E19fuMSBQ",
+          "requestId": "req_5f2d6331-ba90-4bd3-ad1e-89121370f44d"
         },
         {
-          "id": "aud_L-rmSZb2MyWZu9T8zBX-LA",
+          "id": "aud_oX9pGIjLYm0a5fDTXdCOMw",
           "at": "2026-03-01T00:00:00.000Z",
-          "actor": "usr_ea21ac56b0088c910ccb6da1",
-          "scope": "circle:cir_VObNDeH_mv1GyFka0fzHhA",
+          "actor": "usr_ea8c756d017aa2669807f0fe",
+          "scope": "circle:cir_5a0GWix5_gdaNf73lRCn1g",
           "action": "intent.submit",
-          "object": "int_Ri3HDkHNv7WHrN4_MTB-sA",
-          "requestId": "req_05e6e98f-451c-4ddb-9a8e-9070e23483a5"
+          "object": "int_t7OHxDk2tlIb6E19fuMSBQ",
+          "requestId": "req_79e4f965-1bfb-41d8-b75e-24a40a666f61"
         },
         {
-          "id": "aud_qY_qocSLGWb3YE4lwxdWYg",
+          "id": "aud_IUpKQD-_TqQyD6O2fru1bQ",
           "at": "2026-03-01T00:00:00.000Z",
           "actor": "system",
-          "scope": "circle:cir_VObNDeH_mv1GyFka0fzHhA",
+          "scope": "circle:cir_5a0GWix5_gdaNf73lRCn1g",
           "action": "intent.confirmed",
-          "object": "int_Ri3HDkHNv7WHrN4_MTB-sA",
+          "object": "int_t7OHxDk2tlIb6E19fuMSBQ",
           "requestId": "reconcile"
         },
         {
-          "id": "aud_dA8gWwNEEYHyeXSO-nnmjQ",
+          "id": "aud_hAJDWW1oNmU6Y_0tdzELyA",
           "at": "2026-03-01T00:00:00.000Z",
-          "actor": "usr_ea21ac56b0088c910ccb6da1",
-          "scope": "circle:cir_VObNDeH_mv1GyFka0fzHhA",
+          "actor": "usr_ea8c756d017aa2669807f0fe",
+          "scope": "circle:cir_5a0GWix5_gdaNf73lRCn1g",
           "action": "intent.create.TRANSFER_PROPOSE",
-          "object": "int_D_9_sjSeXtgqeYz_GsGL7w",
-          "requestId": "req_1dff91ba-462a-4531-b6e1-d14b30675872"
+          "object": "int_BVhJukebzh2_wJz8jKZOzw",
+          "requestId": "req_ecdf0a4f-8192-4b64-8ae8-05d01824650e"
         },
         {
-          "id": "aud_-tPRQvF9Ao3vv-6MzQPX2w",
+          "id": "aud_7--mPgVdsgx4ps5n8IWdlA",
           "at": "2026-03-01T00:00:00.000Z",
-          "actor": "usr_ea21ac56b0088c910ccb6da1",
-          "scope": "circle:cir_VObNDeH_mv1GyFka0fzHhA",
+          "actor": "usr_ea8c756d017aa2669807f0fe",
+          "scope": "circle:cir_5a0GWix5_gdaNf73lRCn1g",
           "action": "intent.submit",
-          "object": "int_D_9_sjSeXtgqeYz_GsGL7w",
-          "requestId": "req_34c36ec5-93b2-47d2-8379-7c52bdc27717"
+          "object": "int_BVhJukebzh2_wJz8jKZOzw",
+          "requestId": "req_327c27a3-b8e3-420b-b508-f2a4c806d17d"
         },
         {
-          "id": "aud_iEBrh9b-WhQGSQcgxh4hlQ",
+          "id": "aud_9RNCdi4V3OR47mqlSzUsxg",
           "at": "2026-03-01T00:00:00.000Z",
           "actor": "system",
-          "scope": "circle:cir_VObNDeH_mv1GyFka0fzHhA",
+          "scope": "circle:cir_5a0GWix5_gdaNf73lRCn1g",
           "action": "intent.confirmed",
-          "object": "int_D_9_sjSeXtgqeYz_GsGL7w",
+          "object": "int_BVhJukebzh2_wJz8jKZOzw",
           "requestId": "reconcile"
         },
         {
-          "id": "aud_gPi3Qd2q2qceWBdXLH7Qng",
+          "id": "aud_KPRtPDk-hRvVgcjG13UMLQ",
           "at": "2026-03-01T00:00:00.000Z",
-          "actor": "usr_5e04a9ecee1cc48d12625166",
-          "scope": "circle:cir_VObNDeH_mv1GyFka0fzHhA",
+          "actor": "usr_f5839f417f6023147c8d9a2e",
+          "scope": "circle:cir_5a0GWix5_gdaNf73lRCn1g",
           "action": "intent.create.TRANSFER_ACCEPT",
-          "object": "int_ISNL4RXZJck8cpbWK7rJxQ",
-          "requestId": "req_34069663-f6c2-4ba5-9369-f7a49358c674"
+          "object": "int_evWG1m6cS9_b9R63wi2OAg",
+          "requestId": "req_fe07b2fc-95c1-4373-993a-253b4aa81978"
         },
         {
-          "id": "aud_XGRkt976UVZjgOaQnmjKHw",
+          "id": "aud_4ccZwo56zqLg7WCb9zKnHA",
           "at": "2026-03-03T00:00:00.000Z",
-          "actor": "usr_ea21ac56b0088c910ccb6da1",
-          "scope": "circle:cir_VObNDeH_mv1GyFka0fzHhA",
+          "actor": "usr_ea8c756d017aa2669807f0fe",
+          "scope": "circle:cir_5a0GWix5_gdaNf73lRCn1g",
           "action": "intent.create.CLAIM",
-          "object": "int_YqodqCAmp_e_WurXa2TPtQ",
-          "requestId": "req_72677766-f368-4ad3-b047-049e944bb0a6"
+          "object": "int_Usylc7wvkV_Do35rU-gsMw",
+          "requestId": "req_81ef2cc5-f6cb-4f26-b43d-7304e2229c77"
         }
       ],
-      "nextCursor": "aud_XGRkt976UVZjgOaQnmjKHw"
+      "nextCursor": "aud_4ccZwo56zqLg7WCb9zKnHA"
     },
     "authLogout": {
       "ok": true

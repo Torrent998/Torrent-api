@@ -63,3 +63,6 @@ export const auditQuery = z.object({ cursor: z.string().regex(/^aud_[A-Za-z0-9_-
 export const challengeResponse = z.object({ challengeId: z.string(), message: z.string(), expiresAt: z.string() });
 export const loginResponse = z.object({ token: z.string(), expiresAt: z.string(), userId: z.string(), address: z.string(), roles: z.array(z.enum(["user", "auditor"])) });
 export const okSchema = z.object({ ok: z.literal(true) });
+
+export const transferListSchema = z.object({ transfers: z.array(transferSchema.extend({ status: z.enum(["PROPOSING", "AWAITING_RECIPIENT", "ACCEPTING", "COMPLETED", "FAILED"]) })) });
+export const intentListSchema = z.object({ intents: z.array(intentSchema) });

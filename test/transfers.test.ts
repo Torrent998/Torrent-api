@@ -100,6 +100,43 @@ describe("two-step transfer: propose (owner) then approve/accept (recipient)", (
   });
 });
 
+describe("transfer and intent listings", () => {
+  it("derive workflow status from the intents and are member-scoped", async () => {
+    const w = makeWorld(); const { alice, bob, outsider, circleId } = await withRight(w);
+    const { transfer, intent } = await w.rights.transferIntent(ctxOf(alice), "5", { toAddress: bob.principal.stellarAddress, expiresAt: iso(w, 3600_000) }, "tk-list-0001");
+    expect(w.rights.listTransfers(ctxOf(bob), circleId)[0]!.status).toBe("PROPOSING");
+    const sent = await w.intents.submit(ctxOf(alice), intent.id, sign(intent, alice));
+    w.idx.emit("transfer_proposed", sent.txHash!, { rightId: "5", transferId: "77" });
+    w.idx.rights.get("5")!.pendingTransfer = "77";
+    w.idx.transfers.set("77", { transferId: "77", rightId: "5", from: alice.principal.stellarAddress, to: bob.principal.stellarAddress, expiry: Math.floor(w.clock.t / 1000) + 3600, status: "Pending", indexerStatus: "SYNCED", latestObservedLedger: 1 });
+    await w.intents.reconcile();
+    expect(w.rights.listTransfers(ctxOf(bob), circleId)[0]!.status).toBe("AWAITING_RECIPIENT");
+    const { intent: accept } = await w.rights.approve(ctxOf(bob), transfer.id, "tk-list-0002");
+    expect(w.rights.listTransfers(ctxOf(bob), circleId)[0]!.status).toBe("ACCEPTING");
+    const done = await w.intents.submit(ctxOf(bob), accept.id, sign(accept, bob));
+    w.idx.emit("transfer_completed", done.txHash!, { rightId: "5", transferId: "77" });
+    await w.intents.reconcile();
+    expect(w.rights.listTransfers(ctxOf(alice), circleId)[0]!.status).toBe("COMPLETED");
+    expect(() => w.rights.listTransfers(ctxOf(outsider), circleId)).toThrow(/not found/);
+    // intents: only the caller's own, newest first
+    expect(w.intents.listMine(ctxOf(alice), circleId).map((i) => i.id)).toEqual([intent.id]);
+    expect(w.intents.listMine(ctxOf(bob), circleId).map((i) => i.id)).toEqual([accept.id]);
+  });
+  it("an expired accept intent returns the transfer to AWAITING_RECIPIENT", async () => {
+    const w = makeWorld(); const { alice, bob, circleId } = await withRight(w);
+    const { transfer, intent } = await w.rights.transferIntent(ctxOf(alice), "5", { toAddress: bob.principal.stellarAddress, expiresAt: iso(w, 20 * 3600_000) }, "tk-list-0003");
+    const sent = await w.intents.submit(ctxOf(alice), intent.id, sign(intent, alice));
+    w.idx.emit("transfer_proposed", sent.txHash!, { rightId: "5", transferId: "77" });
+    w.idx.transfers.set("77", { transferId: "77", rightId: "5", from: alice.principal.stellarAddress, to: bob.principal.stellarAddress, expiry: Math.floor(w.clock.t / 1000) + 20 * 3600, status: "Pending", indexerStatus: "SYNCED", latestObservedLedger: 1 });
+    await w.intents.reconcile();
+    await w.rights.approve(ctxOf(bob), transfer.id, "tk-list-0004");
+    w.clock.advance(901_000);
+    await w.intents.reconcile(); // accept intent expires unsigned
+    expect(w.rights.listTransfers(ctxOf(bob), circleId)[0]!.status).toBe("AWAITING_RECIPIENT");
+    expect((await w.rights.approve(ctxOf(bob), transfer.id, "tk-list-0005")).intent.state).toBe("AWAITING_SIGNATURE");
+  });
+});
+
 describe("claim intent", () => {
   it("owner only, only once matured (advisory), never twice", async () => {
     const w = makeWorld(); const { alice, bob } = await withRight(w);

@@ -153,6 +153,18 @@ export class ApiController {
     })).body;
   }
 
+  @Get(P("listTransfers"))
+  listTransfers(@CurrentPrincipal() p: Principal, @Req() req: Req, @Param() prm: unknown) {
+    return { transfers: this.rights.listTransfers(this.ctx(p, req), parse(S.idParam, prm).id) };
+  }
+
+  @Get(P("listIntents"))
+  listIntents(@CurrentPrincipal() p: Principal, @Req() req: Req, @Param() prm: unknown) {
+    const ctx = this.ctx(p, req); const { id } = parse(S.idParam, prm);
+    this.circles.getForMember(ctx, id);
+    return { intents: this.intents.listMine(ctx, id).map(intentView) };
+  }
+
   @Get(P("getIntent"))
   getIntent(@CurrentPrincipal() p: Principal, @Req() req: Req, @Param() prm: unknown) {
     return intentView(this.intents.get(this.ctx(p, req), parse(S.idParam, prm).id));

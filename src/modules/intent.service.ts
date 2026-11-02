@@ -78,6 +78,11 @@ export class IntentService {
     return i;
   }
 
+  listMine(ctx: Ctx, circleId: string): Intent[] {
+    return Object.values(this.db.read().intents).filter((i) => i.circleId === circleId && i.actorUserId === ctx.principal.userId)
+      .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  }
+
   /**
    * Forward a user-signed transaction. The tx hash is persisted BEFORE sending, so a crash or
    * timeout after send leaves a SUBMITTED intent that reconciliation resolves by hash; the

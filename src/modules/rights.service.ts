@@ -124,6 +124,20 @@ export class RightsService {
     return { transfer: this.db.read().transfers[rec.id]!, intent };
   }
 
+  /** Workflow status derived from the two intents (the chain remains the source of truth for ownership). */
+  listTransfers(ctx: Ctx, circleId: string) {
+    this.circles.getForMember(ctx, circleId);
+    const st = this.db.read();
+    return Object.values(st.transfers).filter((t) => t.circleId === circleId).sort((a, b) => a.createdAt.localeCompare(b.createdAt)).map((t) => {
+      const p = st.intents[t.proposeIntentId]!; const a = t.acceptIntentId ? st.intents[t.acceptIntentId] : undefined;
+      const status = a?.state === "CONFIRMED" ? "COMPLETED"
+        : p.state === "FAILED" ? "FAILED"
+        : a && a.state !== "FAILED" ? "ACCEPTING"
+        : p.state === "CONFIRMED" ? "AWAITING_RECIPIENT" : "PROPOSING";
+      return { ...transferView(t), status } as const;
+    });
+  }
+
   /** The intent the next signature belongs to: proposal first, then acceptance. */
   currentIntentId(ctx: Ctx, transferId: string): string {
     const rec = this.db.read().transfers[transferId];
