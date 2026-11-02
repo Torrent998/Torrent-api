@@ -14,8 +14,7 @@ Status: accepted (M1/M2 slice). Sources: `docs/SRD.md` (endpoints, error schema,
 9. **Additive endpoints** beyond SRD v1: `POST /v1/invitations/accept`, `GET /v1/intents/:id`, `POST /v1/intents/:id/submit`, `GET /v1/openapi.json`, `/healthz`.
 
 ## Not done (honest list)
-- **No PostgreSQL/Prisma/Redis/BullMQ.** State is an atomic single-file JSON store behind a `Database` unit-of-work, and the reconcile loop is an in-process timer. No Postgres server was available in the authoring sandbox, so a database schema would have been untested. Replace before real volume.
-- **No real identity provider.** `StaticTokenVerifier` is a labeled dev/test adapter; `main.ts` refuses `APP_ENV=production`.
+- **No PostgreSQL/Prisma/Redis/BullMQ.** Persistence is SQLite (`node:sqlite`) behind the `StatePersistence` interface (see 0002), and the reconcile loop is an in-process timer. No Postgres server was available to test against.
 - No KYC/eligibility service, notifications, key rotation, or data export.
 - `SorobanRpcSubmitter` and `HttpIndexerClient` have not run against a live Testnet (no deployment exists). The indexer client *is* contract-tested against the indexer's real recorded responses.
 - Rate limiting is in-memory per process.
