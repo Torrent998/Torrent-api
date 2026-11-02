@@ -4,7 +4,33 @@
 
 > Torrent — Ownership of when money becomes available.
 
-**Status: repository scaffold / not implemented.** This repo is one of **exactly four meaningful independent codebases** in the Torrent Stellar-native project. It is not a placeholder created merely to increase Drips Wave submissions.
+**Status: M0 + M1 implemented, M2 partially (file persistence, in-process reconciliation). Tested with labeled test adapters; NOT run against a live Testnet; NOT production.** This repo is one of **exactly four meaningful independent codebases** in the Torrent Stellar-native project. It is not a placeholder created merely to increase Drips Wave submissions.
+
+## Honest status
+| Item | State |
+|---|---|
+| All SRD v1 endpoints + 5 additive ones, Zod validation, standard error schema, request ids | implemented, 67 tests |
+| OpenAPI 3.1 generated from the same Zod registry; snapshot + route-parity tests | implemented (`openapi/openapi.v1.json`) |
+| Intent state machine, idempotency keys, signed-XDR verification against the approved intent | implemented, failure paths tested (timeouts, expiry, stale authorization, tampered tx) |
+| Ledger-derived coverage/ownership via `torrent-indexer` HTTP client | implemented; client contract-tested against the indexer's real recorded responses |
+| Persistence | atomic **single-file JSON** store. **No PostgreSQL/Prisma/Redis/BullMQ** yet |
+| Authentication | **dev/test adapter only** (static bearer tokens from env); no real identity provider, no KYC |
+| `SorobanRpcSubmitter` | compiled, **never run against live Testnet** |
+| Tests use `test/fakes.ts` (`FakeIndexer`, `TestChainSubmitter`) | clearly labeled **TEST ADAPTERS** |
+
+The API holds no keys and no balances. See `docs/adr/0001-api-design.md`.
+
+## Local startup
+```bash
+npm ci
+npm run check          # typecheck + eslint + vitest (67 tests)
+cp .env.example .env   # set TORRENT_ESCROW_CONTRACT_ID (no deployment exists yet) and DEV_TOKENS
+npm run build && npm start   # http://localhost:3001, /v1/openapi.json, /healthz
+```
+Stop with Ctrl-C/SIGTERM. State: `STATE_FILE` (default `data/api-state.json`, git-ignored). Needs a running `torrent-indexer` at `INDEXER_BASE_URL`. Refuses non-Testnet networks and `APP_ENV=production`.
+
+## Public boundary (versioned)
+`openapi/openapi.v1.json`; consumes `torrent-indexer` v1 (`fixtures/`, mirrored from indexer@dbac919); intent descriptors target `torrent-contracts` ABI v1 (`deposit`, `propose_transfer`, `accept_transfer`, `claim`).
 
 ## Owns
 Authenticated groups, enrollment, policy state, off-chain agreements, transaction intent orchestration, RBAC, compliance and notifications
