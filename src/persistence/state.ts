@@ -68,7 +68,6 @@ export interface ObservedEvent {
   txHash: string;
   ledger: number;
   refs: Record<string, string | undefined>;
-  finality: "SUBMITTED" | "CONFIRMED";
 }
 
 export interface AppState {
@@ -79,7 +78,7 @@ export interface AppState {
   transfers: Record<string, TransferRecord>;
   idempotency: Record<string, IdempotencyRecord>;
   audit: AuditEvent[];
-  ledger: { cursor: string | null; byTx: Record<string, ObservedEvent[]>; pools: Record<string, { controller: string; policyHash: string }> };
+  ledger: { cursor: string | null; byTx: Record<string, ObservedEvent[]>; pools: Record<string, { controller: string; policyHash: string; token: string }> };
 }
 
 export const emptyState = (): AppState => ({
