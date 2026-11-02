@@ -1,0 +1,47 @@
+import { z } from "zod";
+import { acceptInvitationBody, createCircleBody, createInvitationBody } from "../modules/circle.service.js";
+import { fundingIntentBody } from "../modules/funding.service.js";
+import { claimIntentBody, transferIntentBody } from "../modules/rights.service.js";
+import * as S from "./schemas.js";
+
+export interface RouteDef {
+  method: "get" | "post";
+  path: string; // OpenAPI style
+  summary: string;
+  tag: string;
+  auth: boolean;
+  /** Mutating endpoints that create intents require an Idempotency-Key header. */
+  idempotent?: boolean;
+  params?: z.ZodType;
+  query?: z.ZodType;
+  body?: z.ZodType;
+  success: { status: 200 | 201; schema: z.ZodType };
+  errors: number[];
+  /** Additive to the SRD v1 list. */
+  additive?: boolean;
+}
+
+export const nestPath = (p: string) => p.replace(/\{(\w+)\}/g, ":$1");
+const E_AUTH = [400, 401, 429];
+const E_MEMBER = [...E_AUTH, 404];
+
+export const routes = {
+  createCircle: { method: "post", path: "/v1/circles", summary: "Create a circle (off-chain agreement + policy hash)", tag: "circles", auth: true, body: createCircleBody, success: { status: 201, schema: S.circleSchema }, errors: E_AUTH },
+  listCircles: { method: "get", path: "/v1/circles", summary: "List circles the caller belongs to", tag: "circles", auth: true, success: { status: 200, schema: z.object({ circles: z.array(S.circleSchema) }) }, errors: E_AUTH },
+  getCircle: { method: "get", path: "/v1/circles/{id}", summary: "Get one circle", tag: "circles", auth: true, params: S.idParam, success: { status: 200, schema: S.circleSchema }, errors: E_MEMBER },
+  createInvitation: { method: "post", path: "/v1/circles/{id}/invitations", summary: "Invite a member (organizer only)", tag: "circles", auth: true, idempotent: true, params: S.idParam, body: createInvitationBody, success: { status: 201, schema: S.invitationCreatedSchema }, errors: [...E_MEMBER, 403, 409, 422] },
+  acceptInvitation: { method: "post", path: "/v1/invitations/accept", summary: "Accept an invitation with its secret token", tag: "circles", auth: true, body: acceptInvitationBody, success: { status: 200, schema: S.circleSchema }, errors: [...E_MEMBER, 409, 422], additive: true },
+  createFundingIntent: { method: "post", path: "/v1/circles/{id}/funding-intents", summary: "Create a deposit signing request (stateful intent)", tag: "funding", auth: true, idempotent: true, params: S.idParam, body: fundingIntentBody, success: { status: 201, schema: S.intentSchema }, errors: [...E_MEMBER, 409, 422, 503] },
+  getCoverage: { method: "get", path: "/v1/circles/{id}/coverage", summary: "Ledger-derived escrow coverage with freshness", tag: "funding", auth: true, params: S.idParam, success: { status: 200, schema: S.coverageSchema }, errors: E_MEMBER },
+  listRights: { method: "get", path: "/v1/circles/{id}/rights", summary: "Payout rights of the circle's pool (ledger-derived)", tag: "rights", auth: true, params: S.idParam, success: { status: 200, schema: S.rightsSchema }, errors: E_MEMBER },
+  createTransferIntent: { method: "post", path: "/v1/rights/{id}/transfers/intent", summary: "Propose handing a right to another member (owner)", tag: "transfers", auth: true, idempotent: true, params: S.idParam, body: transferIntentBody, success: { status: 201, schema: S.transferWithIntentSchema }, errors: [...E_MEMBER, 403, 409, 422, 503] },
+  approveTransfer: { method: "post", path: "/v1/transfers/{id}/approve", summary: "Recipient approval: creates the accept signing request", tag: "transfers", auth: true, idempotent: true, params: S.idParam, success: { status: 200, schema: S.transferWithIntentSchema }, errors: [...E_MEMBER, 403, 409, 503] },
+  submitTransfer: { method: "post", path: "/v1/transfers/{id}/submit", summary: "Submit the signed transaction for the transfer's current step", tag: "transfers", auth: true, params: S.idParam, body: S.signBody, success: { status: 200, schema: z.object({ intent: S.intentSchema }) }, errors: [...E_MEMBER, 403, 409, 422, 503] },
+  createClaimIntent: { method: "post", path: "/v1/rights/{id}/claim-intent", summary: "Create a claim signing request (owner, matured)", tag: "rights", auth: true, idempotent: true, params: S.idParam, body: claimIntentBody, success: { status: 201, schema: z.object({ intent: S.intentSchema }) }, errors: [...E_MEMBER, 403, 422, 503] },
+  getIntent: { method: "get", path: "/v1/intents/{id}", summary: "Read an intent's state", tag: "intents", auth: true, params: S.idParam, success: { status: 200, schema: S.intentSchema }, errors: E_MEMBER, additive: true },
+  submitIntent: { method: "post", path: "/v1/intents/{id}/submit", summary: "Submit a signed transaction for an intent", tag: "intents", auth: true, params: S.idParam, body: S.signBody, success: { status: 200, schema: z.object({ intent: S.intentSchema }) }, errors: [...E_MEMBER, 403, 409, 422, 503], additive: true },
+  ledgerEvents: { method: "get", path: "/v1/ledger/events", summary: "Indexer events limited to the caller's circles", tag: "ledger", auth: true, query: S.ledgerQuery, success: { status: 200, schema: S.eventsPageSchema }, errors: [...E_AUTH, 503] },
+  circleAudit: { method: "get", path: "/v1/circles/{id}/audit", summary: "Audit trail (organizer only)", tag: "circles", auth: true, params: S.idParam, success: { status: 200, schema: S.auditSchema }, errors: [...E_MEMBER, 403] },
+} satisfies Record<string, RouteDef>;
+
+export type RouteId = keyof typeof routes;

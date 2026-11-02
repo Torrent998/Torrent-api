@@ -10,7 +10,7 @@ import { CONFIG, type AppConfig } from "../common/context.js";
 
 export const createCircleBody = z.object({ name: z.string().trim().min(1).max(80), ruleSet: ruleSetSchema }).strict();
 export const createInvitationBody = z.object({ label: z.string().trim().min(1).max(80) }).strict();
-export const acceptInvitationBody = z.object({}).strict();
+export const acceptInvitationBody = z.object({ token: z.string().min(16).max(200) }).strict();
 
 /** Public view: no internal fields; poolId only appears once bound to an on-chain pool. */
 export const circleView = (c: Circle) => ({
