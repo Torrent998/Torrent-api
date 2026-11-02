@@ -1,5 +1,7 @@
 import { rpc } from "@stellar/stellar-sdk";
 
+export const CHAIN_SUBMITTER = Symbol("CHAIN_SUBMITTER");
+
 export type ChainTxStatus = "PENDING" | "SUCCESS" | "FAILED" | "NOT_FOUND";
 
 /** Sends already-signed transactions and reports their fate. It never signs or edits anything. */
