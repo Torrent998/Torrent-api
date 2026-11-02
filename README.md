@@ -9,7 +9,7 @@
 ## Honest status
 | Item | State |
 |---|---|
-| All SRD v1 endpoints + 5 additive ones, Zod validation, standard error schema, request ids | implemented, 67 tests |
+| All SRD v1 endpoints + 5 additive ones, Zod validation, standard error schema, request ids | implemented, 68 tests |
 | OpenAPI 3.1 generated from the same Zod registry; snapshot + route-parity tests | implemented (`openapi/openapi.v1.json`) |
 | Intent state machine, idempotency keys, signed-XDR verification against the approved intent | implemented, failure paths tested (timeouts, expiry, stale authorization, tampered tx) |
 | Ledger-derived coverage/ownership via `torrent-indexer` HTTP client | implemented; client contract-tested against the indexer's real recorded responses |
@@ -23,7 +23,7 @@ The API holds no keys and no balances. See `docs/adr/0001-api-design.md`.
 ## Local startup
 ```bash
 npm ci
-npm run check          # typecheck + eslint + vitest (67 tests)
+npm run check          # typecheck + eslint + vitest (68 tests)
 cp .env.example .env   # set TORRENT_ESCROW_CONTRACT_ID (no deployment exists yet) and DEV_TOKENS
 npm run build && npm start   # http://localhost:3001, /v1/openapi.json, /healthz
 ```
