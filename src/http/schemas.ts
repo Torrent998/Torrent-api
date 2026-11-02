@@ -44,6 +44,7 @@ export const rightsSchema = z.object({
   })),
 });
 export const auditSchema = z.object({
+  nextCursor: z.string().nullable(),
   events: z.array(z.object({ id: z.string(), at: z.string(), actor: z.string(), scope: z.string(), action: z.string(), object: z.string(), requestId: z.string() })),
 });
 export const invitationCreatedSchema = z.object({
@@ -57,3 +58,8 @@ export const ledgerQuery = z.object({
   limit: z.coerce.number().int().min(1).max(200).default(50),
 });
 export { eventsPageSchema };
+
+export const auditQuery = z.object({ cursor: z.string().regex(/^aud_[A-Za-z0-9_-]+$/).optional(), limit: z.coerce.number().int().min(1).max(200).default(50) });
+export const challengeResponse = z.object({ challengeId: z.string(), message: z.string(), expiresAt: z.string() });
+export const loginResponse = z.object({ token: z.string(), expiresAt: z.string(), userId: z.string(), address: z.string(), roles: z.array(z.enum(["user", "auditor"])) });
+export const okSchema = z.object({ ok: z.literal(true) });

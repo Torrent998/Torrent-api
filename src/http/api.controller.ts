@@ -2,8 +2,9 @@ import { Body, Controller, Get, HttpCode, Inject, Param, Post, Query, Req, UseGu
 import type { Request } from "express";
 import type { z } from "zod";
 import { AuthGuard, CurrentPrincipal, type Principal } from "../auth/auth.js";
+import { AuthService } from "../auth/auth.service.js";
 import type { Ctx } from "../common/context.js";
-import { forbidden } from "../common/errors.js";
+import { badRequest, forbidden } from "../common/errors.js";
 import { INDEXER } from "../modules/ledger-sync.service.js";
 import type { IndexerClient } from "../integrations/indexer-client.js";
 import { AuditService } from "../modules/audit.service.js";
@@ -29,6 +30,24 @@ export class PublicController {
 
   @Get("/v1/openapi.json")
   openapi() { return buildOpenApi(); }
+}
+
+@Controller()
+@UseGuards(RateLimitGuard)
+export class AuthController {
+  constructor(@Inject(AuthService) private readonly auth: AuthService) {}
+
+  @Post(P("authChallenge")) @HttpCode(201)
+  challenge(@Body() body: unknown) { return this.auth.challenge(parse(routes.authChallenge.body, body).address); }
+
+  @Post(P("authLogin")) @HttpCode(200)
+  login(@Body() body: unknown) { const b = parse(routes.authLogin.body, body); return this.auth.login(b.challengeId, b.signature); }
+
+  @Post(P("authLogout")) @HttpCode(200) @UseGuards(AuthGuard)
+  logout(@Req() req: Req) {
+    this.auth.logout(/^Bearer (.+)$/.exec(req.headers["authorization"] ?? "")?.[1] ?? "");
+    return { ok: true as const };
+  }
 }
 
 @Controller()
@@ -164,10 +183,14 @@ export class ApiController {
   }
 
   @Get(P("circleAudit"))
-  circleAudit(@CurrentPrincipal() p: Principal, @Req() req: Req, @Param() prm: unknown) {
-    const { id } = parse(S.idParam, prm);
+  circleAudit(@CurrentPrincipal() p: Principal, @Req() req: Req, @Param() prm: unknown, @Query() q: unknown) {
+    const { id } = parse(S.idParam, prm); const { cursor, limit } = parse(S.auditQuery, q);
     const c = this.circles.getForMember(this.ctx(p, req), id);
     if (c.organizerUserId !== p.userId && !p.roles.includes("auditor")) throw forbidden("organizer or auditor role required");
-    return { events: this.audit.forCircle(c.id) };
+    const all = this.audit.forCircle(c.id);
+    const start = cursor ? all.findIndex((e) => e.id === cursor) + 1 : 0;
+    if (cursor && start === 0) throw badRequest("INVALID_CURSOR", "unknown audit cursor");
+    const events = all.slice(start, start + limit);
+    return { events, nextCursor: events.at(-1)?.id ?? cursor ?? null };
   }
 }

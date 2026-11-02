@@ -15,6 +15,8 @@ export interface AppConfig {
   /** Intent creation is refused when the indexer lags by more than this many ledgers. */
   maxIndexerLagLedgers: number;
   invitationTtlSeconds: number;
+  /** Addresses granted the read-only `auditor` role on login. */
+  auditorAddresses?: string[];
 }
 
 /** Per-request context passed explicitly into services. */

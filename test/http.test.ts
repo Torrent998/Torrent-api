@@ -9,7 +9,7 @@ import { buildOpenApi } from "../src/http/openapi.js";
 import { errorSchema } from "../src/http/schemas.js";
 import { MemoryPersistence } from "../src/persistence/state.js";
 import { Controller } from "@nestjs/common";
-import { ApiController, PublicController } from "../src/http/api.controller.js";
+import { ApiController, AuthController, PublicController } from "../src/http/api.controller.js";
 import { FakeIndexer, TestChainSubmitter } from "./fakes.js";
 import { TOKEN_ID, signedTxFor } from "./helpers.js";
 import { actor, TestClock, testConfig, type Actor } from "./helpers-app.js";
@@ -170,7 +170,7 @@ describe("end to end over HTTP (fake indexer / fake submitter)", () => {
 describe("OpenAPI is the real contract", () => {
   it("documents exactly the routes the controllers implement (method + path)", () => {
     const impl = new Set<string>();
-    for (const C of [PublicController, ApiController]) {
+    for (const C of [PublicController, AuthController, ApiController]) {
       for (const name of Object.getOwnPropertyNames(C.prototype)) {
         const fn = (C.prototype as unknown as Record<string, unknown>)[name];
         if (typeof fn !== "function" || name === "constructor") continue;

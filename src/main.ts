@@ -3,7 +3,6 @@
  * STATUS: the real Soroban RPC submitter and HTTP indexer client are wired here but have not been
  * run against a live Testnet in this repository (no deployed contract exists yet).
  */
-import { StaticTokenVerifier, type Principal } from "./auth/auth.js";
 import { createApp } from "./bootstrap.js";
 import { SorobanRpcSubmitter } from "./integrations/chain-submitter.js";
 import { HttpIndexerClient } from "./integrations/indexer-client.js";
@@ -19,10 +18,7 @@ const env = (k: string, d?: string): string => {
 const appEnv = env("APP_ENV", "development");
 const network = env("STELLAR_NETWORK", "testnet");
 if (network !== "testnet") throw new Error("MVP is Testnet-only; mainnet requires the go-live review in docs/PROJECT_MASTER.md");
-if (appEnv === "production") {
-  throw new Error("no production identity provider exists yet; the only TokenVerifier is the dev adapter");
-}
-const devTokens = JSON.parse(process.env["DEV_TOKENS"] ?? "{}") as Record<string, Principal>;
+void appEnv; // wallet-signature login (AuthService) is the only authentication path
 
 const app = await createApp(
   {
@@ -34,12 +30,12 @@ const app = await createApp(
       reconcileAfterSeconds: Number(env("SUBMITTED_RECONCILE_AFTER_SECONDS", "120")),
       maxIndexerLagLedgers: Number(env("MAX_INDEXER_LAG_LEDGERS", "10")),
       invitationTtlSeconds: 7 * 86400,
+      auditorAddresses: (process.env["AUDITOR_ADDRESSES"] ?? "").split(",").map((x) => x.trim()).filter(Boolean),
     },
     clock: { now: () => new Date() },
     persistence: new SqlitePersistence(env("DATABASE_PATH", "data/torrent-api.db")),
     indexer: new HttpIndexerClient(env("INDEXER_BASE_URL", "http://localhost:3002")),
     submitter: new SorobanRpcSubmitter(env("STELLAR_RPC_URL", "https://soroban-testnet.stellar.org")),
-    verifier: new StaticTokenVerifier(devTokens),
   },
   ["log", "warn", "error"],
 );
