@@ -8,7 +8,7 @@ import { createApp } from "./bootstrap.js";
 import { SorobanRpcSubmitter } from "./integrations/chain-submitter.js";
 import { HttpIndexerClient } from "./integrations/indexer-client.js";
 import { IntentService } from "./modules/intent.service.js";
-import { FilePersistence } from "./persistence/state.js";
+import { SqlitePersistence } from "./persistence/sqlite.js";
 
 const env = (k: string, d?: string): string => {
   const v = process.env[k] ?? d;
@@ -36,7 +36,7 @@ const app = await createApp(
       invitationTtlSeconds: 7 * 86400,
     },
     clock: { now: () => new Date() },
-    persistence: new FilePersistence(env("STATE_FILE", "data/api-state.json")),
+    persistence: new SqlitePersistence(env("DATABASE_PATH", "data/torrent-api.db")),
     indexer: new HttpIndexerClient(env("INDEXER_BASE_URL", "http://localhost:3002")),
     submitter: new SorobanRpcSubmitter(env("STELLAR_RPC_URL", "https://soroban-testnet.stellar.org")),
     verifier: new StaticTokenVerifier(devTokens),

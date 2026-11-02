@@ -70,6 +70,13 @@ export interface ObservedEvent {
   refs: Record<string, string | undefined>;
 }
 
+export interface AuthChallenge {
+  id: string; address: string; nonce: string; message: string; expiresAt: string; used: boolean;
+}
+export interface SessionRecord {
+  id: string; tokenHash: string; userId: string; address: string; roles: ("user" | "auditor")[]; createdAt: string; expiresAt: string; revoked: boolean;
+}
+
 export interface AppState {
   schemaVersion: 1;
   circles: Record<string, Circle>;
@@ -78,11 +85,14 @@ export interface AppState {
   transfers: Record<string, TransferRecord>;
   idempotency: Record<string, IdempotencyRecord>;
   audit: AuditEvent[];
+  /** Wallet-signature login: one-time challenges and issued sessions (token stored as sha256). */
+  authChallenges: Record<string, AuthChallenge>;
+  sessions: Record<string, SessionRecord>;
   ledger: { cursor: string | null; byTx: Record<string, ObservedEvent[]>; pools: Record<string, { controller: string; policyHash: string; token: string }> };
 }
 
 export const emptyState = (): AppState => ({
-  schemaVersion: 1, circles: {}, invitations: {}, intents: {}, transfers: {}, idempotency: {}, audit: [],
+  schemaVersion: 1, circles: {}, invitations: {}, intents: {}, transfers: {}, idempotency: {}, audit: [], authChallenges: {}, sessions: {},
   ledger: { cursor: null, byTx: {}, pools: {} },
 });
 
@@ -104,7 +114,7 @@ export class FilePersistence implements StatePersistence {
     if (!existsSync(this.path)) return null;
     const s = JSON.parse(readFileSync(this.path, "utf8")) as AppState;
     if (s.schemaVersion !== 1) throw new Error(`unsupported state schemaVersion ${String(s.schemaVersion)}`);
-    return s;
+    return { ...emptyState(), ...s };
   }
   save(s: AppState): void {
     mkdirSync(dirname(this.path), { recursive: true });
