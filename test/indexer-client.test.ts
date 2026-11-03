@@ -19,15 +19,22 @@ async function serve(handler: (path: string) => [number, unknown]): Promise<Http
 const fromFixtures = (path: string): [number, unknown] => (path in ex ? [200, ex[path]] : [404, { error: {} }]);
 
 describe("HttpIndexerClient against the indexer's REAL recorded responses (contract test)", () => {
-  it("parses every v1 response shape", async () => {
+  it("parses every v1 response shape (torrent-escrow ABI v2 data)", async () => {
     const c = await serve(fromFixtures);
     expect((await c.status()).status).toBe("SYNCED");
-    expect((await c.pool("1"))?.totals.claimed).toBe("600");
-    expect((await c.poolRights("1"))?.length).toBe(2);
+    const pool = await c.pool("1");
+    expect(pool?.totals.claimed).toBe("650");
+    expect(pool).toMatchObject({ status: "Closed", pendingController: null });
+    expect(pool?.departedMembers).toHaveLength(1);
+    expect((await c.pool("2"))?.members).toEqual([]);
+    expect((await c.poolRights("1"))?.length).toBe(3);
     expect((await c.right("2"))?.state).toBe("Issued");
     expect((await c.transfer("2"))?.status).toBe("Cancelled");
+    expect((await c.transfer("4"))?.status).toBe("Cancelled");
     const page = await c.events(null, 200);
-    expect(page.events).toHaveLength(14);
+    expect(page.events).toHaveLength(35);
+    expect(page.events.map((e) => e.name)).toContain("upgrades_locked");
+    expect(await c.contract()).toMatchObject({ abiVersion: 2, upgradesLocked: true, pendingUpgrade: null });
   });
   it("maps 404 to null", async () => {
     const c = await serve(fromFixtures);

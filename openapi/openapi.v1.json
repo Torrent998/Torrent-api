@@ -2155,7 +2155,9 @@
                         "FUNDING",
                         "TRANSFER_PROPOSE",
                         "TRANSFER_ACCEPT",
-                        "CLAIM"
+                        "TRANSFER_CANCEL",
+                        "CLAIM",
+                        "POOL_LEAVE"
                       ]
                     },
                     "circleId": {
@@ -2626,7 +2628,8 @@
                           "type": "string",
                           "enum": [
                             "Active",
-                            "Paused"
+                            "Paused",
+                            "Closed"
                           ]
                         },
                         "indexerStatus": {
@@ -3201,6 +3204,12 @@
                             "null"
                           ]
                         },
+                        "cancelIntentId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
                         "chainTransferId": {
                           "type": [
                             "string",
@@ -3220,6 +3229,7 @@
                         "expiresAt",
                         "proposeIntentId",
                         "acceptIntentId",
+                        "cancelIntentId",
                         "chainTransferId",
                         "createdAt"
                       ],
@@ -3244,7 +3254,9 @@
                             "FUNDING",
                             "TRANSFER_PROPOSE",
                             "TRANSFER_ACCEPT",
-                            "CLAIM"
+                            "TRANSFER_CANCEL",
+                            "CLAIM",
+                            "POOL_LEAVE"
                           ]
                         },
                         "circleId": {
@@ -3735,6 +3747,12 @@
                             "null"
                           ]
                         },
+                        "cancelIntentId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
                         "chainTransferId": {
                           "type": [
                             "string",
@@ -3754,6 +3772,7 @@
                         "expiresAt",
                         "proposeIntentId",
                         "acceptIntentId",
+                        "cancelIntentId",
                         "chainTransferId",
                         "createdAt"
                       ],
@@ -3778,7 +3797,516 @@
                             "FUNDING",
                             "TRANSFER_PROPOSE",
                             "TRANSFER_ACCEPT",
-                            "CLAIM"
+                            "TRANSFER_CANCEL",
+                            "CLAIM",
+                            "POOL_LEAVE"
+                          ]
+                        },
+                        "circleId": {
+                          "type": "string"
+                        },
+                        "state": {
+                          "type": "string",
+                          "enum": [
+                            "DRAFT",
+                            "VERIFIED",
+                            "AWAITING_SIGNATURE",
+                            "SUBMITTED",
+                            "CONFIRMED",
+                            "FAILED",
+                            "RECONCILING"
+                          ]
+                        },
+                        "descriptor": {
+                          "type": "object",
+                          "properties": {
+                            "contractId": {
+                              "type": "string"
+                            },
+                            "function": {
+                              "type": "string"
+                            },
+                            "args": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "type": {
+                                    "type": "string",
+                                    "enum": [
+                                      "u64",
+                                      "i128",
+                                      "address",
+                                      "bytes32"
+                                    ]
+                                  },
+                                  "value": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "name",
+                                  "type",
+                                  "value"
+                                ],
+                                "additionalProperties": false
+                              }
+                            }
+                          },
+                          "required": [
+                            "contractId",
+                            "function",
+                            "args"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "txHash": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "failureReason": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "verifiedAtLedger": {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        "expiresAt": {
+                          "type": "string"
+                        },
+                        "createdAt": {
+                          "type": "string"
+                        },
+                        "updatedAt": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "schemaVersion",
+                        "requestId",
+                        "kind",
+                        "circleId",
+                        "state",
+                        "descriptor",
+                        "txHash",
+                        "failureReason",
+                        "verifiedAtLedger",
+                        "expiresAt",
+                        "createdAt",
+                        "updatedAt"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "transfer",
+                    "intent"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$schema": "https://json-schema.org/draft/2020-12/schema",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "requestId": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "requestId"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$schema": "https://json-schema.org/draft/2020-12/schema",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "requestId": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "requestId"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$schema": "https://json-schema.org/draft/2020-12/schema",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "requestId": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "requestId"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (also used to avoid disclosing existence)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$schema": "https://json-schema.org/draft/2020-12/schema",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "requestId": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "requestId"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict / illegal state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$schema": "https://json-schema.org/draft/2020-12/schema",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "requestId": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "requestId"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$schema": "https://json-schema.org/draft/2020-12/schema",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "requestId": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "requestId"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Indexer halted/stale/unreachable (fail closed)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$schema": "https://json-schema.org/draft/2020-12/schema",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "requestId": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "requestId"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/transfers/{id}/cancel": {
+      "post": {
+        "operationId": "cancelTransfer",
+        "summary": "Proposer withdraws an on-chain proposal: creates the cancel_transfer signing request",
+        "tags": [
+          "transfers"
+        ],
+        "x-additive-to-srd-v1": true,
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9_-]+$"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_-]{8,128}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$schema": "https://json-schema.org/draft/2020-12/schema",
+                  "type": "object",
+                  "properties": {
+                    "transfer": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "circleId": {
+                          "type": "string"
+                        },
+                        "rightId": {
+                          "type": "string"
+                        },
+                        "from": {
+                          "type": "string"
+                        },
+                        "to": {
+                          "type": "string"
+                        },
+                        "expiresAt": {
+                          "type": "string"
+                        },
+                        "proposeIntentId": {
+                          "type": "string"
+                        },
+                        "acceptIntentId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "cancelIntentId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "chainTransferId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "createdAt": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "circleId",
+                        "rightId",
+                        "from",
+                        "to",
+                        "expiresAt",
+                        "proposeIntentId",
+                        "acceptIntentId",
+                        "cancelIntentId",
+                        "chainTransferId",
+                        "createdAt"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "intent": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "schemaVersion": {
+                          "type": "number",
+                          "const": 1
+                        },
+                        "requestId": {
+                          "type": "string"
+                        },
+                        "kind": {
+                          "type": "string",
+                          "enum": [
+                            "FUNDING",
+                            "TRANSFER_PROPOSE",
+                            "TRANSFER_ACCEPT",
+                            "TRANSFER_CANCEL",
+                            "CLAIM",
+                            "POOL_LEAVE"
                           ]
                         },
                         "circleId": {
@@ -4234,7 +4762,9 @@
                             "FUNDING",
                             "TRANSFER_PROPOSE",
                             "TRANSFER_ACCEPT",
-                            "CLAIM"
+                            "TRANSFER_CANCEL",
+                            "CLAIM",
+                            "POOL_LEAVE"
                           ]
                         },
                         "circleId": {
@@ -4726,7 +5256,9 @@
                             "FUNDING",
                             "TRANSFER_PROPOSE",
                             "TRANSFER_ACCEPT",
-                            "CLAIM"
+                            "TRANSFER_CANCEL",
+                            "CLAIM",
+                            "POOL_LEAVE"
                           ]
                         },
                         "circleId": {
@@ -5105,6 +5637,743 @@
         }
       }
     },
+    "/v1/circles/{id}/leave-intent": {
+      "post": {
+        "operationId": "createLeaveIntent",
+        "summary": "Leave the on-chain pool (member owns no unclaimed right)",
+        "tags": [
+          "circles"
+        ],
+        "x-additive-to-srd-v1": true,
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9_-]+$"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_-]{8,128}$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "object",
+                "properties": {},
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$schema": "https://json-schema.org/draft/2020-12/schema",
+                  "type": "object",
+                  "properties": {
+                    "intent": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "schemaVersion": {
+                          "type": "number",
+                          "const": 1
+                        },
+                        "requestId": {
+                          "type": "string"
+                        },
+                        "kind": {
+                          "type": "string",
+                          "enum": [
+                            "FUNDING",
+                            "TRANSFER_PROPOSE",
+                            "TRANSFER_ACCEPT",
+                            "TRANSFER_CANCEL",
+                            "CLAIM",
+                            "POOL_LEAVE"
+                          ]
+                        },
+                        "circleId": {
+                          "type": "string"
+                        },
+                        "state": {
+                          "type": "string",
+                          "enum": [
+                            "DRAFT",
+                            "VERIFIED",
+                            "AWAITING_SIGNATURE",
+                            "SUBMITTED",
+                            "CONFIRMED",
+                            "FAILED",
+                            "RECONCILING"
+                          ]
+                        },
+                        "descriptor": {
+                          "type": "object",
+                          "properties": {
+                            "contractId": {
+                              "type": "string"
+                            },
+                            "function": {
+                              "type": "string"
+                            },
+                            "args": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "type": {
+                                    "type": "string",
+                                    "enum": [
+                                      "u64",
+                                      "i128",
+                                      "address",
+                                      "bytes32"
+                                    ]
+                                  },
+                                  "value": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "name",
+                                  "type",
+                                  "value"
+                                ],
+                                "additionalProperties": false
+                              }
+                            }
+                          },
+                          "required": [
+                            "contractId",
+                            "function",
+                            "args"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "txHash": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "failureReason": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "verifiedAtLedger": {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        "expiresAt": {
+                          "type": "string"
+                        },
+                        "createdAt": {
+                          "type": "string"
+                        },
+                        "updatedAt": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "schemaVersion",
+                        "requestId",
+                        "kind",
+                        "circleId",
+                        "state",
+                        "descriptor",
+                        "txHash",
+                        "failureReason",
+                        "verifiedAtLedger",
+                        "expiresAt",
+                        "createdAt",
+                        "updatedAt"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "intent"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$schema": "https://json-schema.org/draft/2020-12/schema",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "requestId": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "requestId"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$schema": "https://json-schema.org/draft/2020-12/schema",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "requestId": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "requestId"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (also used to avoid disclosing existence)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$schema": "https://json-schema.org/draft/2020-12/schema",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "requestId": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "requestId"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict / illegal state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$schema": "https://json-schema.org/draft/2020-12/schema",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "requestId": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "requestId"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Business rule violated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$schema": "https://json-schema.org/draft/2020-12/schema",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "requestId": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "requestId"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$schema": "https://json-schema.org/draft/2020-12/schema",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "requestId": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "requestId"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Indexer halted/stale/unreachable (fail closed)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$schema": "https://json-schema.org/draft/2020-12/schema",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "requestId": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "requestId"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/contract": {
+      "get": {
+        "operationId": "getContract",
+        "summary": "Contract governance (admin, pending timelocked upgrade, upgrade lock), ledger-derived",
+        "tags": [
+          "ledger"
+        ],
+        "x-additive-to-srd-v1": true,
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$schema": "https://json-schema.org/draft/2020-12/schema",
+                  "type": "object",
+                  "properties": {
+                    "contractId": {
+                      "type": "string"
+                    },
+                    "abiVersion": {
+                      "type": "number",
+                      "const": 2
+                    },
+                    "admin": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "pendingAdmin": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "pendingUpgrade": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "wasmHash": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{64}$"
+                            },
+                            "executableAfter": {
+                              "type": "integer",
+                              "minimum": -9007199254740991,
+                              "maximum": 9007199254740991
+                            },
+                            "proposedAtLedger": {
+                              "type": "integer",
+                              "minimum": -9007199254740991,
+                              "maximum": 9007199254740991
+                            }
+                          },
+                          "required": [
+                            "wasmHash",
+                            "executableAfter",
+                            "proposedAtLedger"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "upgradesLocked": {
+                      "type": "boolean"
+                    },
+                    "upgrades": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "wasmHash": {
+                            "type": "string"
+                          },
+                          "ledger": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          }
+                        },
+                        "required": [
+                          "wasmHash",
+                          "ledger"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "indexerStatus": {
+                      "type": "string",
+                      "enum": [
+                        "SYNCING",
+                        "SYNCED",
+                        "RECONCILING"
+                      ]
+                    },
+                    "latestObservedLedger": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    }
+                  },
+                  "required": [
+                    "contractId",
+                    "abiVersion",
+                    "admin",
+                    "pendingAdmin",
+                    "pendingUpgrade",
+                    "upgradesLocked",
+                    "upgrades",
+                    "indexerStatus",
+                    "latestObservedLedger"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$schema": "https://json-schema.org/draft/2020-12/schema",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "requestId": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "requestId"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$schema": "https://json-schema.org/draft/2020-12/schema",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "requestId": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "requestId"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$schema": "https://json-schema.org/draft/2020-12/schema",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "requestId": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "requestId"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Indexer halted/stale/unreachable (fail closed)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$schema": "https://json-schema.org/draft/2020-12/schema",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "requestId": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "requestId"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/circles/{id}/transfers": {
       "get": {
         "operationId": "listTransfers",
@@ -5173,6 +6442,12 @@
                               "null"
                             ]
                           },
+                          "cancelIntentId": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
                           "chainTransferId": {
                             "type": [
                               "string",
@@ -5189,6 +6464,8 @@
                               "AWAITING_RECIPIENT",
                               "ACCEPTING",
                               "COMPLETED",
+                              "CANCELLING",
+                              "CANCELLED",
                               "FAILED"
                             ]
                           }
@@ -5202,6 +6479,7 @@
                           "expiresAt",
                           "proposeIntentId",
                           "acceptIntentId",
+                          "cancelIntentId",
                           "chainTransferId",
                           "createdAt",
                           "status"
@@ -5426,7 +6704,9 @@
                               "FUNDING",
                               "TRANSFER_PROPOSE",
                               "TRANSFER_ACCEPT",
-                              "CLAIM"
+                              "TRANSFER_CANCEL",
+                              "CLAIM",
+                              "POOL_LEAVE"
                             ]
                           },
                           "circleId": {
@@ -5747,7 +7027,9 @@
                         "FUNDING",
                         "TRANSFER_PROPOSE",
                         "TRANSFER_ACCEPT",
-                        "CLAIM"
+                        "TRANSFER_CANCEL",
+                        "CLAIM",
+                        "POOL_LEAVE"
                       ]
                     },
                     "circleId": {
@@ -6086,7 +7368,9 @@
                             "FUNDING",
                             "TRANSFER_PROPOSE",
                             "TRANSFER_ACCEPT",
-                            "CLAIM"
+                            "TRANSFER_CANCEL",
+                            "CLAIM",
+                            "POOL_LEAVE"
                           ]
                         },
                         "circleId": {

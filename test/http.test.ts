@@ -146,6 +146,19 @@ describe("end to end over HTTP (fake indexer / fake submitter)", () => {
     expect(c.id).toBeTruthy();
   });
 
+  it("ABI v2 routes: governance view, leave intent (idempotency key required), cancel guarded", async () => {
+    const c = await circleWithPool();
+    await http().get("/v1/contract").expect(401);
+    idx.gov.pendingUpgrade = { wasmHash: "cd".repeat(32), executableAfter: 1_900_000_000, proposedAtLedger: 10 };
+    const g = (await http().get("/v1/contract").set(auth(bob)).expect(200)).body;
+    expect(g).toMatchObject({ abiVersion: 2, upgradesLocked: false, pendingUpgrade: { wasmHash: "cd".repeat(32) } });
+    await http().post(`/v1/circles/${c.id}/leave-intent`).set(auth(bob)).send({}).expect(400);
+    const l = (await http().post(`/v1/circles/${c.id}/leave-intent`).set(auth(bob)).set("Idempotency-Key", "leave-key-0001").send({}).expect(201)).body;
+    expect(l.intent.descriptor.function).toBe("leave_pool");
+    await http().post(`/v1/circles/${c.id}/leave-intent`).set(auth(eve)).set("Idempotency-Key", "leave-key-0002").send({}).expect(404);
+    await http().post("/v1/transfers/trf_missing/cancel").set(auth(bob)).set("Idempotency-Key", "cncl-key-0001").expect(404);
+  });
+
   it("serves ledger events limited to the caller's pools", async () => {
     const c = await circleWithPool();
     idx.addRight({ rightId: "5", poolId: "1", owner: alice.principal.stellarAddress });

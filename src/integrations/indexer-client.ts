@@ -6,7 +6,8 @@ const amt = z.string().regex(/^\d+$/);
 
 export const poolSchema = z.object({
   poolId: z.string(), controller: z.string(), token: z.string(), membershipPolicyHash: z.string(),
-  startLedger: z.number().int(), status: z.enum(["Active", "Paused"]), members: z.array(z.string()),
+  startLedger: z.number().int(), status: z.enum(["Active", "Paused", "Closed"]), members: z.array(z.string()),
+  departedMembers: z.array(z.string()), pendingController: z.string().nullable(),
   receipts: z.number().int(),
   totals: z.object({ funded: amt, reserved: amt, claimed: amt, withdrawn: amt }),
   createdAtLedger: z.number().int(),
@@ -20,7 +21,14 @@ export const rightSchema = z.object({
 });
 export const transferSchema = z.object({
   transferId: z.string(), rightId: z.string(), from: z.string(), to: z.string(), expiry: z.number().int(),
-  status: z.enum(["Pending", "Completed", "Cancelled", "Superseded"]), ...meta,
+  status: z.enum(["Pending", "Completed", "Cancelled"]), ...meta,
+});
+/** Contract governance as derived by the indexer (torrent-escrow ABI v2). */
+export const contractSchema = z.object({
+  contractId: z.string(), abiVersion: z.literal(2), admin: z.string().nullable(), pendingAdmin: z.string().nullable(),
+  pendingUpgrade: z.object({ wasmHash: z.string().regex(/^[0-9a-f]{64}$/), executableAfter: z.number().int(), proposedAtLedger: z.number().int() }).nullable(),
+  upgradesLocked: z.boolean(), upgrades: z.array(z.object({ wasmHash: z.string(), ledger: z.number().int() })),
+  ...meta,
 });
 export const poolRightsSchema = z.object({ rights: z.array(rightSchema.omit({ indexerStatus: true, latestObservedLedger: true })), ...meta });
 export const eventSchema = z.object({
@@ -46,6 +54,7 @@ export type IndexedTransfer = z.infer<typeof transferSchema>;
 export type IndexedEventView = z.infer<typeof eventSchema>;
 export type EventsPage = z.infer<typeof eventsPageSchema>;
 export type IndexerStatusView = z.infer<typeof indexerStatusSchema>;
+export type ContractView = z.infer<typeof contractSchema>;
 
 /** Read-only view of ledger-derived truth. The API never overrides what this returns. */
 export interface IndexerClient {
@@ -55,6 +64,7 @@ export interface IndexerClient {
   right(rightId: string): Promise<IndexedRight | null>;
   transfer(transferId: string): Promise<IndexedTransfer | null>;
   events(cursor: string | null, limit: number): Promise<EventsPage>;
+  contract(): Promise<ContractView>;
 }
 
 export class HttpIndexerClient implements IndexerClient {
@@ -83,6 +93,7 @@ export class HttpIndexerClient implements IndexerClient {
   }
   right(id: string) { return this.get(`/v1/rights/${enc(id)}`, rightSchema, true); }
   transfer(id: string) { return this.get(`/v1/transfers/${enc(id)}`, transferSchema, true); }
+  contract() { return this.get("/v1/contract", contractSchema) as Promise<ContractView>; }
   events(cursor: string | null, limit: number) {
     const q = new URLSearchParams({ limit: String(limit), ...(cursor ? { cursor } : {}) });
     return this.get(`/v1/ledger/events?${q}`, eventsPageSchema) as Promise<EventsPage>;

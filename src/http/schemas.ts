@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { INTENT_STATES } from "../domain/intent.js";
+import { INTENT_KINDS, INTENT_STATES } from "../domain/intent.js";
 import { addressSchema, ruleSetSchema } from "../domain/rules.js";
 import { eventsPageSchema } from "../integrations/indexer-client.js";
 
@@ -18,13 +18,13 @@ export const descriptorSchema = z.object({
 });
 export const intentSchema = z.object({
   id: z.string(), schemaVersion: z.literal(1), requestId: z.string(),
-  kind: z.enum(["FUNDING", "TRANSFER_PROPOSE", "TRANSFER_ACCEPT", "CLAIM"]), circleId: z.string(),
+  kind: z.enum(INTENT_KINDS), circleId: z.string(),
   state: z.enum(INTENT_STATES), descriptor: descriptorSchema, txHash: z.string().nullable(), failureReason: z.string().nullable(),
   verifiedAtLedger: z.number().int(), expiresAt: z.string(), createdAt: z.string(), updatedAt: z.string(),
 });
 export const transferSchema = z.object({
   id: z.string(), circleId: z.string(), rightId: z.string(), from: z.string(), to: z.string(), expiresAt: z.string(),
-  proposeIntentId: z.string(), acceptIntentId: z.string().nullable(), chainTransferId: z.string().nullable(), createdAt: z.string(),
+  proposeIntentId: z.string(), acceptIntentId: z.string().nullable(), cancelIntentId: z.string().nullable(), chainTransferId: z.string().nullable(), createdAt: z.string(),
 });
 export const transferWithIntentSchema = z.object({ transfer: transferSchema, intent: intentSchema });
 export const coverageSchema = z.union([
@@ -32,7 +32,7 @@ export const coverageSchema = z.union([
   z.object({
     circleId: z.string(), bound: z.literal(true), poolId: z.string(),
     totals: z.object({ funded: z.string(), reserved: z.string(), claimed: z.string(), withdrawn: z.string() }),
-    unreserved: z.string(), fullyBacked: z.boolean(), poolStatus: z.enum(["Active", "Paused"]),
+    unreserved: z.string(), fullyBacked: z.boolean(), poolStatus: z.enum(["Active", "Paused", "Closed"]),
     indexerStatus: z.enum(["SYNCING", "SYNCED", "RECONCILING"]), asOfLedger: z.number().int(), lagLedgers: z.number().int(), observedAt: z.string(),
   }),
 ]);
@@ -64,5 +64,7 @@ export const challengeResponse = z.object({ challengeId: z.string(), message: z.
 export const loginResponse = z.object({ token: z.string(), expiresAt: z.string(), userId: z.string(), address: z.string(), roles: z.array(z.enum(["user", "auditor"])) });
 export const okSchema = z.object({ ok: z.literal(true) });
 
-export const transferListSchema = z.object({ transfers: z.array(transferSchema.extend({ status: z.enum(["PROPOSING", "AWAITING_RECIPIENT", "ACCEPTING", "COMPLETED", "FAILED"]) })) });
+export const transferListSchema = z.object({ transfers: z.array(transferSchema.extend({ status: z.enum(["PROPOSING", "AWAITING_RECIPIENT", "ACCEPTING", "COMPLETED", "CANCELLING", "CANCELLED", "FAILED"]) })) });
+export const intentOnlySchema = z.object({ intent: intentSchema });
+export { contractSchema } from "../integrations/indexer-client.js";
 export const intentListSchema = z.object({ intents: z.array(intentSchema) });

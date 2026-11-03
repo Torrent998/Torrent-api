@@ -136,6 +136,27 @@ export class ApiController {
     })).body;
   }
 
+  @Post(P("cancelTransfer")) @HttpCode(200)
+  async cancelTransfer(@CurrentPrincipal() p: Principal, @Req() req: Req, @Param() prm: unknown) {
+    const { id } = parse(S.idParam, prm); const key = this.key(req);
+    return (await this.idem.run(p.userId, key, { id, op: "cancel" }, async () => {
+      const r = await this.rights.cancel(this.ctx(p, req), id, key);
+      return { statusCode: 200, body: { transfer: transferView(r.transfer), intent: intentView(r.intent) } };
+    })).body;
+  }
+
+  @Post(P("createLeaveIntent")) @HttpCode(201)
+  async createLeaveIntent(@CurrentPrincipal() p: Principal, @Req() req: Req, @Param() prm: unknown, @Body() body: unknown) {
+    const { id } = parse(S.idParam, prm); parse(routes.createLeaveIntent.body, body ?? {});
+    const key = this.key(req);
+    return (await this.idem.run(p.userId, key, { id, op: "leave" }, async () => ({
+      statusCode: 201, body: { intent: intentView(await this.funding.leaveIntent(this.ctx(p, req), id, key)) },
+    }))).body;
+  }
+
+  @Get(P("getContract"))
+  getContract() { return this.indexer.contract(); }
+
   @Post(P("submitTransfer")) @HttpCode(200)
   async submitTransfer(@CurrentPrincipal() p: Principal, @Req() req: Req, @Param() prm: unknown, @Body() body: unknown) {
     const { id } = parse(S.idParam, prm); const b = parse(S.signBody, body);

@@ -9,6 +9,7 @@ import { CircleService } from "./circle.service.js";
 import { IntentService } from "./intent.service.js";
 
 export const fundingIntentBody = z.object({ amount: amountSchema }).strict();
+export const leaveIntentBody = z.object({}).strict();
 
 @Injectable()
 export class FundingService {
@@ -28,6 +29,7 @@ export class FundingService {
     const pool = await this.indexer.pool(c.poolId);
     if (!pool) throw unprocessable("POOL_NOT_FOUND", "indexer does not know this pool");
     if (pool.status === "Paused") throw conflict("POOL_PAUSED", "pool is paused; funding is disabled");
+    if (pool.status === "Closed") throw conflict("POOL_CLOSED", "pool is closed; it accepts no new funding");
     return this.intents.create(ctx, {
       kind: "FUNDING", circleId, poolId: pool.poolId, idempotencyKey, verifiedAtLedger: latestLedger,
       expectEvent: { name: "funded", refs: { poolId: pool.poolId } },
@@ -37,6 +39,34 @@ export class FundingService {
           { name: "pool_id", type: "u64", value: pool.poolId },
           { name: "from", type: "address", value: ctx.principal.stellarAddress },
           { name: "amount", type: "i128", value: body.amount },
+        ],
+      },
+    });
+  }
+
+  /**
+   * leave_pool signing request. The contract refuses while the member owns an unclaimed right; we
+   * check the same against ledger-derived ownership first so nobody signs a doomed transaction.
+   * Off-chain circle membership (agreement history) is kept; only on-chain eligibility ends.
+   */
+  async leaveIntent(ctx: Ctx, circleId: string, idempotencyKey: string) {
+    const c = this.circles.getForMember(ctx, circleId);
+    if (!c.poolId) throw unprocessable("POOL_NOT_BOUND", "no on-chain pool is bound to this circle yet");
+    const { latestLedger } = await this.ledger.assertHealthy();
+    const pool = await this.indexer.pool(c.poolId);
+    if (!pool) throw unprocessable("POOL_NOT_FOUND", "indexer does not know this pool");
+    const me = ctx.principal.stellarAddress;
+    if (!pool.members.includes(me)) throw unprocessable("NOT_POOL_MEMBER", "you are not a member of the on-chain pool");
+    const owned = ((await this.indexer.poolRights(c.poolId)) ?? []).filter((r) => r.owner === me && r.state === "Issued");
+    if (owned.length > 0) throw unprocessable("MEMBER_HAS_RIGHTS", `you still own ${owned.length} unclaimed right(s); hand them over or claim them first`);
+    return this.intents.create(ctx, {
+      kind: "POOL_LEAVE", circleId, poolId: pool.poolId, idempotencyKey, verifiedAtLedger: latestLedger,
+      expectEvent: { name: "member_left", refs: { poolId: pool.poolId } },
+      descriptor: {
+        contractId: this.cfg.contractId, function: "leave_pool",
+        args: [
+          { name: "pool_id", type: "u64", value: pool.poolId },
+          { name: "member", type: "address", value: me },
         ],
       },
     });

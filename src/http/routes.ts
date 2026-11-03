@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { acceptInvitationBody, createCircleBody, createInvitationBody } from "../modules/circle.service.js";
-import { fundingIntentBody } from "../modules/funding.service.js";
+import { fundingIntentBody, leaveIntentBody } from "../modules/funding.service.js";
 import { claimIntentBody, transferIntentBody } from "../modules/rights.service.js";
 import { challengeBody, loginBody } from "../auth/auth.service.js";
 import * as S from "./schemas.js";
@@ -40,8 +40,11 @@ export const routes = {
   listRights: { method: "get", path: "/v1/circles/{id}/rights", summary: "Payout rights of the circle's pool (ledger-derived)", tag: "rights", auth: true, params: S.idParam, success: { status: 200, schema: S.rightsSchema }, errors: E_MEMBER },
   createTransferIntent: { method: "post", path: "/v1/rights/{id}/transfers/intent", summary: "Propose handing a right to another member (owner)", tag: "transfers", auth: true, idempotent: true, params: S.idParam, body: transferIntentBody, success: { status: 201, schema: S.transferWithIntentSchema }, errors: [...E_MEMBER, 403, 409, 422, 503] },
   approveTransfer: { method: "post", path: "/v1/transfers/{id}/approve", summary: "Recipient approval: creates the accept signing request", tag: "transfers", auth: true, idempotent: true, params: S.idParam, success: { status: 200, schema: S.transferWithIntentSchema }, errors: [...E_MEMBER, 403, 409, 503] },
+  cancelTransfer: { method: "post", path: "/v1/transfers/{id}/cancel", summary: "Proposer withdraws an on-chain proposal: creates the cancel_transfer signing request", tag: "transfers", auth: true, idempotent: true, params: S.idParam, success: { status: 200, schema: S.transferWithIntentSchema }, errors: [...E_MEMBER, 403, 409, 503], additive: true },
   submitTransfer: { method: "post", path: "/v1/transfers/{id}/submit", summary: "Submit the signed transaction for the transfer's current step", tag: "transfers", auth: true, params: S.idParam, body: S.signBody, success: { status: 200, schema: z.object({ intent: S.intentSchema }) }, errors: [...E_MEMBER, 403, 409, 422, 503] },
   createClaimIntent: { method: "post", path: "/v1/rights/{id}/claim-intent", summary: "Create a claim signing request (owner, matured)", tag: "rights", auth: true, idempotent: true, params: S.idParam, body: claimIntentBody, success: { status: 201, schema: z.object({ intent: S.intentSchema }) }, errors: [...E_MEMBER, 403, 422, 503] },
+  createLeaveIntent: { method: "post", path: "/v1/circles/{id}/leave-intent", summary: "Leave the on-chain pool (member owns no unclaimed right)", tag: "circles", auth: true, idempotent: true, params: S.idParam, body: leaveIntentBody, success: { status: 201, schema: S.intentOnlySchema }, errors: [...E_MEMBER, 409, 422, 503], additive: true },
+  getContract: { method: "get", path: "/v1/contract", summary: "Contract governance (admin, pending timelocked upgrade, upgrade lock), ledger-derived", tag: "ledger", auth: true, success: { status: 200, schema: S.contractSchema }, errors: [...E_AUTH, 503], additive: true },
   listTransfers: { method: "get", path: "/v1/circles/{id}/transfers", summary: "Transfer proposals in the circle with their workflow status", tag: "transfers", auth: true, params: S.idParam, success: { status: 200, schema: S.transferListSchema }, errors: E_MEMBER, additive: true },
   listIntents: { method: "get", path: "/v1/circles/{id}/intents", summary: "The caller's own intents in the circle (funding, transfers, claims)", tag: "intents", auth: true, params: S.idParam, success: { status: 200, schema: S.intentListSchema }, errors: E_MEMBER, additive: true },
   getIntent: { method: "get", path: "/v1/intents/{id}", summary: "Read an intent's state", tag: "intents", auth: true, params: S.idParam, success: { status: 200, schema: S.intentSchema }, errors: E_MEMBER, additive: true },

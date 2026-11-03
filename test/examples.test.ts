@@ -83,6 +83,19 @@ describe("api-examples.v1.json", () => {
     out["approveTransfer"] = (await http().post(`/v1/transfers/${tr.transfer.id}/approve`).set(B).set("Idempotency-Key", "ex-appr-0001").expect(200)).body;
     out["listTransfers"] = (await http().get(`/v1/circles/${circle.id}/transfers`).set(B).expect(200)).body;
     out["listIntents"] = (await http().get(`/v1/circles/${circle.id}/intents`).set(A).expect(200)).body;
+    // A second offer that the proposer withdraws (cancel_transfer).
+    idx.addRight({ rightId: "6", poolId: "1", amount: "1000000000", owner: alice.publicKey(), maturity: Math.floor(clock.t / 1000) + 86400 });
+    const tr2 = (await http().post("/v1/rights/6/transfers/intent").set(A).set("Idempotency-Key", "ex-xfer-0002").send({ toAddress: bob.publicKey(), expiresAt: new Date(clock.t + 3600_000).toISOString() }).expect(201)).body;
+    const sentT2 = (await http().post(`/v1/transfers/${tr2.transfer.id}/submit`).set(A).send({ signedXdr: signedTxFor(tr2.intent.descriptor, alice) }).expect(200)).body;
+    idx.emit("transfer_proposed", sentT2.intent.txHash, { rightId: "6", transferId: "78" });
+    idx.rights.get("6")!.pendingTransfer = "78";
+    idx.transfers.set("78", { transferId: "78", rightId: "6", from: alice.publicKey(), to: bob.publicKey(), expiry: Math.floor(clock.t / 1000) + 3600, status: "Pending", indexerStatus: "SYNCED", latestObservedLedger: 1 });
+    await intents.reconcile();
+    out["cancelTransfer"] = (await http().post(`/v1/transfers/${tr2.transfer.id}/cancel`).set(A).set("Idempotency-Key", "ex-cncl-0001").expect(200)).body;
+    idx.gov.admin = alice.publicKey();
+    idx.gov.pendingUpgrade = { wasmHash: "ab".repeat(32), executableAfter: Math.floor(clock.t / 1000) + 7 * 86400, proposedAtLedger: 950 };
+    out["getContract"] = (await http().get("/v1/contract").set(A).expect(200)).body;
+    out["createLeaveIntent"] = (await http().post(`/v1/circles/${circle.id}/leave-intent`).set(B).set("Idempotency-Key", "ex-leave-0001").send({}).expect(201)).body;
     clock.advance(2 * 86400_000);
     const A2 = await login(alice); const B2 = await login(bob); // sessions expire after 12 h
     out["createClaimIntent"] = (await http().post("/v1/rights/5/claim-intent").set(A2).set("Idempotency-Key", "ex-claim-0001").send({}).expect(201)).body;

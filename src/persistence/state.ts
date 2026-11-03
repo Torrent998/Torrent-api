@@ -43,6 +43,8 @@ export interface TransferRecord {
   expiresAt: string;
   proposeIntentId: string;
   acceptIntentId: string | null;
+  /** Proposer's cancel_transfer intent (optional for records written before it existed). */
+  cancelIntentId?: string | null;
   chainTransferId: string | null;
   createdAt: string;
 }

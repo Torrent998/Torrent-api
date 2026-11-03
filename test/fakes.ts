@@ -1,5 +1,5 @@
 import type { ChainSubmitter, ChainTxStatus } from "../src/integrations/chain-submitter.js";
-import type { EventsPage, IndexedEventView, IndexedPool, IndexedRight, IndexedTransfer, IndexerClient, IndexerStatusView } from "../src/integrations/indexer-client.js";
+import type { ContractView, EventsPage, IndexedEventView, IndexedPool, IndexedRight, IndexedTransfer, IndexerClient, IndexerStatusView } from "../src/integrations/indexer-client.js";
 import { CONTRACT_ID } from "./helpers.js";
 
 /**
@@ -12,6 +12,9 @@ export class FakeIndexer implements IndexerClient {
   rights = new Map<string, IndexedRight>();
   transfers = new Map<string, IndexedTransfer>();
   log: IndexedEventView[] = [];
+  gov: Omit<ContractView, "indexerStatus" | "latestObservedLedger"> = {
+    contractId: CONTRACT_ID, abiVersion: 2, admin: null, pendingAdmin: null, pendingUpgrade: null, upgradesLocked: false, upgrades: [],
+  };
   private seq = 0;
   down = false;
 
@@ -21,6 +24,7 @@ export class FakeIndexer implements IndexerClient {
   async poolRights(id: string) { return this.pools.has(id) ? [...this.rights.values()].filter((r) => r.poolId === id) : null; }
   async right(id: string) { return this.rights.get(id) ?? null; }
   async transfer(id: string) { return this.transfers.get(id) ?? null; }
+  async contract(): Promise<ContractView> { if (this.down) throw new Error("down"); return { ...this.gov, ...this.meta() }; }
   async events(cursor: string | null, limit: number): Promise<EventsPage> {
     const evs = this.log.filter((e) => cursor === null || e.id > cursor).slice(0, limit);
     return { schemaVersion: 1, network: this.st.network, events: evs, nextCursor: evs.at(-1)?.id ?? cursor, indexerStatus: this.st.status };
@@ -36,7 +40,7 @@ export class FakeIndexer implements IndexerClient {
   }
   addPool(p: Partial<IndexedPool> & { poolId: string; controller: string; token: string; membershipPolicyHash: string; members?: string[] }): IndexedPool {
     const full: IndexedPool = {
-      startLedger: 1, status: "Active", members: [], receipts: 0, createdAtLedger: 1,
+      startLedger: 1, status: "Active", members: [], departedMembers: [], pendingController: null, receipts: 0, createdAtLedger: 1,
       totals: { funded: "0", reserved: "0", claimed: "0", withdrawn: "0" }, coverage: { unreserved: "0", fullyBacked: true }, ...this.meta(), ...p,
     };
     this.pools.set(full.poolId, full);
