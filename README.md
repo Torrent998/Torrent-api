@@ -28,15 +28,18 @@ The authoritative off-chain backend. It owns people, policy and workflow, **not 
   single-use invitation codes stored hashed.
 - **Wallet sign-in**: SEP-53 `signMessage` challenge (single use, 5 min) -> 12 h revocable session; an `auditor`
   role by configured address.
-- **Signing requests (intents)**: `DRAFT -> VERIFIED -> AWAITING_SIGNATURE -> SUBMITTED -> CONFIRMED`, with
+- **Signing requests (intents)** for every member-signed contract call: deposit, propose / accept / **cancel**
+  a transfer, claim and **leave the pool**. States `DRAFT -> VERIFIED -> AWAITING_SIGNATURE -> SUBMITTED -> CONFIRMED`, with
   `FAILED` and `RECONCILING`. Idempotency keys on every write; a signed transaction is checked against the approved
   intent before submission; timeouts reconcile by transaction hash and are never retried with new parameters.
-- **Ledger truth comes from the indexer**: coverage and ownership are read from Torrent-indexer; the API cannot
-  override confirmed on-chain state.
+- **Ledger truth comes from the indexer**: coverage, ownership, pool status (Active / Paused / Closed) and contract
+  governance (`GET /v1/contract`: pending timelocked upgrade, upgrade lock) are read from Torrent-indexer; the API
+  cannot override confirmed on-chain state. It pre-checks the contract's rules (closed pools, matured rights, offers
+  that would outlive maturity, leaving while owning a right) so nobody is asked to sign a doomed transaction.
 - **Append-only audit trail**, request ids, rate limiting, standard error schema.
 
 Public boundary: [`openapi/openapi.v1.json`](./openapi/openapi.v1.json) (OpenAPI 3.1, generated from the same Zod
-registry that validates requests). It consumes Torrent-indexer v1 (`fixtures/`) and targets Torrent-contracts ABI v1.
+registry that validates requests). It consumes Torrent-indexer v1 (`fixtures/`) and targets Torrent-contracts **ABI v2**.
 
 ## Quickstart
 
@@ -60,14 +63,14 @@ cannot confirm on-chain actions.
 
 | Area | State |
 |---|---|
-| All SRD v1 endpoints plus additive ones, Zod validation, standard errors, request ids, rate limiting | implemented |
+| All SRD v1 endpoints plus additive ones (transfer cancel, leave-pool intent, contract governance view), Zod validation, standard errors, request ids, rate limiting | implemented |
 | OpenAPI 3.1 generated from the Zod registry; snapshot and route-parity tests | implemented |
-| Intent state machine, idempotency, signed-XDR verification against the approved intent | implemented, failure paths tested (timeouts, expiry, stale authorization, tampered transactions) |
+| Intent state machine (funding, transfer propose/accept/cancel, claim, pool leave), idempotency, signed-XDR verification against the approved intent | implemented, failure paths tested (timeouts, expiry, stale authorization, tampered transactions, closed pools, matured rights) |
 | Ledger-derived coverage and ownership via the indexer HTTP client | implemented; contract-tested against the indexer's real recorded responses |
 | Persistence | SQLite (`node:sqlite`, WAL, versioned migrations, append-only audit). `node:sqlite` is experimental in Node 22. No PostgreSQL/Redis yet |
 | Authentication | wallet-signature login. No KYC or eligibility provider |
 | `SorobanRpcSubmitter` | compiled, **never run against live Testnet** |
-| Tests | 87 passing (plus 1 golden-regeneration test that only runs with `UPDATE_GOLDEN=1`); test doubles in `test/fakes.ts` are labelled **TEST ADAPTERS** |
+| Tests | 98 passing (plus 1 golden-regeneration test that only runs with `UPDATE_GOLDEN=1`); test doubles in `test/fakes.ts` are labelled **TEST ADAPTERS** |
 | Security audit / Mainnet | **no** / **no** |
 
 Design records: [docs/adr/](./docs/adr/).

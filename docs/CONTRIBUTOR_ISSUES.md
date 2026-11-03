@@ -44,6 +44,14 @@ Sizes: small (a day or two), medium (up to a week), large (more, usually with an
 - **Size:** small
 - **Non-goals:** Changing the API surface.
 
+## 6. Organizer intents for controller calls
+
+- **Motivation:** `create_pool`, `allow_member`, `issue_right`, `close_pool` and controller rotation are run with stellar-cli; organizers have no signing-request flow for them.
+- **Touches:** `src/modules`, `src/http/routes.ts`, ADR
+- **Acceptance:** Organizer-only intents for these calls with server-side pre-checks (issuance only against indexer-reported unreserved value, allow/remove only before funding), confirmation by their events, OpenAPI regenerated; unauthorized and stale paths tested.
+- **Size:** large
+- **Non-goals:** Holding the controller key on the server.
+
 ## Already done
 
-Earlier items on this list (cross-repo schemas and golden fixtures, per-repo CI, the intent state machine and reconciliation, coverage-invariant and double-claim property tests, transfer authorization, and indexer replay/backfill) are implemented; see each repository's README status table.
+Earlier items on this list (cross-repo schemas and golden fixtures, per-repo CI, the intent state machine and reconciliation, coverage-invariant and double-claim property tests, transfer authorization, indexer replay/backfill, and the ABI v2 cancel/leave intents with closed-pool and timing pre-checks) are implemented; see each repository's README status table.
