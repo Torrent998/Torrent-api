@@ -17,7 +17,7 @@
     "start": "node --env-file-if-exists=.env dist/src/main.js"
   },
   "dependencies": {
-    "@nestjs/common": "11.2.8",
+    "@nestjs/common": "12.3.2",
     "@nestjs/core": "11.2.8",
     "@nestjs/platform-express": "11.2.8",
     "@stellar/stellar-sdk": "17.4.0",
