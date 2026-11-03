@@ -38,5 +38,8 @@
     "typescript-eslint": "8.72.1",
     "unplugin-swc": "2.0.0",
     "vitest": "5.0.5"
+  },
+  "overrides": {
+    "multer": "2.5.0"
   }
 }
