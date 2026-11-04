@@ -69,7 +69,7 @@ cannot confirm on-chain actions.
 | Ledger-derived coverage and ownership via the indexer HTTP client | implemented; contract-tested against the indexer's real recorded responses |
 | Persistence | SQLite (`node:sqlite`, WAL, versioned migrations, append-only audit). `node:sqlite` is experimental in Node 22. No PostgreSQL/Redis yet |
 | Authentication | wallet-signature login. No KYC or eligibility provider |
-| `SorobanRpcSubmitter` | compiled, **never run against live Testnet** |
+| `SorobanRpcSubmitter` | exercised against live Testnet on 2026-11-04 (deposit and organizer flows, see docs/DEPLOYMENT.md) |
 | Tests | 98 passing (plus 1 golden-regeneration test that only runs with `UPDATE_GOLDEN=1`); test doubles in `test/fakes.ts` are labelled **TEST ADAPTERS** |
 | Security audit / Mainnet | **no** / **no** |
 
