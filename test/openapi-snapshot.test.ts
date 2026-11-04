@@ -8,6 +8,6 @@ describe("openapi/openapi.v1.json", () => {
     const path = new URL("../openapi/openapi.v1.json", import.meta.url);
     const doc = JSON.stringify(buildOpenApi(), null, 2) + "\n";
     if (process.env["UPDATE_GOLDEN"]) writeFileSync(path, doc);
-    expect(readFileSync(path, "utf8")).toBe(doc);
+    expect(readFileSync(path, "utf8").replace(/\r\n/g, "\n")).toBe(doc);
   });
 });

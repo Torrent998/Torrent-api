@@ -122,7 +122,7 @@ export class FilePersistence implements StatePersistence {
     mkdirSync(dirname(this.path), { recursive: true });
     const tmp = `${this.path}.tmp`;
     writeFileSync(tmp, JSON.stringify(s));
-    const fd = openSync(tmp, "r");
+    const fd = openSync(tmp, "r+");
     try { fsyncSync(fd); } finally { closeSync(fd); }
     renameSync(tmp, this.path);
   }
