@@ -6,7 +6,7 @@ export const INTENT_STATES = [
 ] as const;
 export type IntentState = (typeof INTENT_STATES)[number];
 
-export const INTENT_KINDS = ["FUNDING", "TRANSFER_PROPOSE", "TRANSFER_ACCEPT", "TRANSFER_CANCEL", "CLAIM", "POOL_LEAVE"] as const;
+export const INTENT_KINDS = ["FUNDING", "TRANSFER_PROPOSE", "TRANSFER_ACCEPT", "TRANSFER_CANCEL", "CLAIM", "POOL_LEAVE", "POOL_CREATE", "RIGHT_ISSUE", "POOL_CLOSE"] as const;
 export type IntentKind = (typeof INTENT_KINDS)[number];
 
 const NEXT: Record<IntentState, readonly IntentState[]> = {

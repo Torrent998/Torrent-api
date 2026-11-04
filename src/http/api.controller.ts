@@ -10,6 +10,7 @@ import type { IndexerClient } from "../integrations/indexer-client.js";
 import { AuditService } from "../modules/audit.service.js";
 import { CircleService, circleView } from "../modules/circle.service.js";
 import { FundingService } from "../modules/funding.service.js";
+import { OrganizerService } from "../modules/organizer.service.js";
 import { IdempotencyService, type Reply } from "../modules/idempotency.service.js";
 import { IntentService, intentView } from "../modules/intent.service.js";
 import { RightsService, transferView } from "../modules/rights.service.js";
@@ -56,6 +57,7 @@ export class ApiController {
   constructor(
     @Inject(CircleService) private readonly circles: CircleService,
     @Inject(FundingService) private readonly funding: FundingService,
+    @Inject(OrganizerService) private readonly organizer: OrganizerService,
     @Inject(RightsService) private readonly rights: RightsService,
     @Inject(IntentService) private readonly intents: IntentService,
     @Inject(IdempotencyService) private readonly idem: IdempotencyService,
@@ -151,6 +153,33 @@ export class ApiController {
     const key = this.key(req);
     return (await this.idem.run(p.userId, key, { id, op: "leave" }, async () => ({
       statusCode: 201, body: { intent: intentView(await this.funding.leaveIntent(this.ctx(p, req), id, key)) },
+    }))).body;
+  }
+
+  @Post(P("createPoolIntent")) @HttpCode(201)
+  async createPoolIntent(@CurrentPrincipal() p: Principal, @Req() req: Req, @Param() prm: unknown, @Body() body: unknown) {
+    const { id } = parse(S.idParam, prm); parse(routes.createPoolIntent.body, body ?? {});
+    const key = this.key(req);
+    return (await this.idem.run(p.userId, key, { id, op: "pool-create" }, async () => ({
+      statusCode: 201, body: { intent: intentView(await this.organizer.createPoolIntent(this.ctx(p, req), id, key)) },
+    }))).body;
+  }
+
+  @Post(P("createIssueRightIntent")) @HttpCode(201)
+  async createIssueRightIntent(@CurrentPrincipal() p: Principal, @Req() req: Req, @Param() prm: unknown, @Body() body: unknown) {
+    const { id } = parse(S.idParam, prm); const b = parse(routes.createIssueRightIntent.body, body);
+    const key = this.key(req);
+    return (await this.idem.run(p.userId, key, { id, op: "right-issue", b }, async () => ({
+      statusCode: 201, body: { intent: intentView(await this.organizer.issueRightIntent(this.ctx(p, req), id, b, key)) },
+    }))).body;
+  }
+
+  @Post(P("createClosePoolIntent")) @HttpCode(201)
+  async createClosePoolIntent(@CurrentPrincipal() p: Principal, @Req() req: Req, @Param() prm: unknown, @Body() body: unknown) {
+    const { id } = parse(S.idParam, prm); parse(routes.createClosePoolIntent.body, body ?? {});
+    const key = this.key(req);
+    return (await this.idem.run(p.userId, key, { id, op: "pool-close" }, async () => ({
+      statusCode: 201, body: { intent: intentView(await this.organizer.closePoolIntent(this.ctx(p, req), id, key)) },
     }))).body;
   }
 

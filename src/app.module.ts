@@ -10,6 +10,7 @@ import type { IndexerClient } from "./integrations/indexer-client.js";
 import { AuditService } from "./modules/audit.service.js";
 import { CircleService } from "./modules/circle.service.js";
 import { FundingService } from "./modules/funding.service.js";
+import { OrganizerService } from "./modules/organizer.service.js";
 import { IdempotencyService } from "./modules/idempotency.service.js";
 import { IntentService } from "./modules/intent.service.js";
 import { INDEXER, LedgerSyncService } from "./modules/ledger-sync.service.js";
@@ -45,7 +46,7 @@ export class AppModule implements NestModule {
         { provide: RATE_LIMIT, useValue: d.rateLimit ?? { limit: 120, windowMs: 60_000 } },
         RateLimitGuard,
         { provide: APP_FILTER, useClass: ErrorFilter },
-        AuthGuard, AuthService, AuditService, CircleService, FundingService, IdempotencyService, IntentService, LedgerSyncService, RightsService,
+        AuthGuard, AuthService, AuditService, CircleService, FundingService, OrganizerService, IdempotencyService, IntentService, LedgerSyncService, RightsService,
       ],
       exports: [IntentService, LedgerSyncService, Database],
     };

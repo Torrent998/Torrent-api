@@ -3,6 +3,7 @@ import { CircleService } from "../src/modules/circle.service.js";
 import { FundingService } from "../src/modules/funding.service.js";
 import { IntentService } from "../src/modules/intent.service.js";
 import { LedgerSyncService } from "../src/modules/ledger-sync.service.js";
+import { OrganizerService } from "../src/modules/organizer.service.js";
 import { RightsService } from "../src/modules/rights.service.js";
 import { FakeIndexer, TestChainSubmitter } from "./fakes.js";
 import { TOKEN_ID, signedTxFor } from "./helpers.js";
@@ -20,8 +21,9 @@ export function makeWorld(cfgOver: Partial<AppConfig> = {}) {
   const ledger = new LedgerSyncService(db, idx, clock, cfg);
   const intents = new IntentService(db, clock, cfg, audit, ledger, sub);
   const funding = new FundingService(circles, intents, ledger, idx, cfg, clock);
+  const organizer = new OrganizerService(circles, intents, ledger, idx, cfg, clock);
   const rights = new RightsService(db, circles, intents, ledger, idx, cfg, clock, audit);
-  return { db, clock, idx, sub, cfg, circles, ledger, intents, funding, rights, audit };
+  return { db, clock, idx, sub, cfg, circles, ledger, intents, funding, organizer, rights, audit };
 }
 export type World = ReturnType<typeof makeWorld>;
 
