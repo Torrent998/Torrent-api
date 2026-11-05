@@ -6,6 +6,7 @@
 import { createApp } from "./bootstrap.js";
 import { SorobanRpcSubmitter } from "./integrations/chain-submitter.js";
 import { HttpIndexerClient } from "./integrations/indexer-client.js";
+import { parseAllowedOrigins } from "./http/cors.js";
 import { IntentService } from "./modules/intent.service.js";
 import { SqlitePersistence } from "./persistence/sqlite.js";
 
@@ -19,6 +20,9 @@ const appEnv = env("APP_ENV", "development");
 const network = env("STELLAR_NETWORK", "testnet");
 if (network !== "testnet") throw new Error("MVP is Testnet-only; mainnet requires the go-live review in docs/PROJECT_MASTER.md");
 void appEnv; // wallet-signature login (AuthService) is the only authentication path
+// Exact browser origins allowed to call this API (e.g. https://torrent-web1.vercel.app). Unset = no CORS headers.
+// A malformed list throws here, at startup, instead of silently serving the wrong policy.
+const allowedOrigins = parseAllowedOrigins(process.env["CORS_ALLOWED_ORIGINS"]);
 
 const app = await createApp(
   {
@@ -38,6 +42,7 @@ const app = await createApp(
     submitter: new SorobanRpcSubmitter(env("STELLAR_RPC_URL", "https://soroban-testnet.stellar.org")),
   },
   ["log", "warn", "error"],
+  { cors: { allowedOrigins: allowedOrigins } },
 );
 await app.listen(Number(env("PORT", "3001")));
 

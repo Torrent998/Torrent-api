@@ -50,7 +50,7 @@ git clone https://github.com/Torrent998/Torrent-api && cd Torrent-api
 npm ci
 npm run check            # typecheck + eslint + vitest
 npm run build
-cp .env.example .env     # set TORRENT_ESCROW_CONTRACT_ID; INDEXER_BASE_URL -> a running torrent-indexer
+cp .env.example .env     # set TORRENT_ESCROW_CONTRACT_ID; INDEXER_BASE_URL -> a running torrent-indexer; CORS_ALLOWED_ORIGINS -> the web app's origin
 npm start                # http://localhost:3001  (/healthz, /v1/openapi.json)
 ```
 

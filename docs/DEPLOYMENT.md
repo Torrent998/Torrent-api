@@ -20,6 +20,18 @@ LOG_LEVEL=info
 - Credentials to sign on-chain go into a secure secret manager or hardware-backed user wallet, never into a public mobile/web bundle.
 - Signed store badge links are configured after actual publication; no fabricated App Store or Google Play app URLs.
 
+## CORS for the browser app
+
+The web app calls this API from the browser, so the API must name the web app's origin. Set on the host (Render, Railway, Fly):
+
+```
+CORS_ALLOWED_ORIGINS=https://torrent-web1.vercel.app
+```
+
+Exact origins only (scheme + host + port), comma-separated; a wildcard or a malformed entry stops the process at startup. Unset means no CORS headers at all, so a
+browser on another origin cannot read any response. Preflight (`OPTIONS`) is answered with `204` before authentication. The session token travels in the
+`Authorization` header, never in a cookie, so credentials are never allowed. Checked by `test/cors.test.ts` (9 tests).
+
 ## CI & GitHub setup
 - GitHub Actions per repo: formatting/lint, schema checks, unit tests, dependency scanning; chain/devices smoke tests where supported.
 - Branch protection and PR review recommended.
