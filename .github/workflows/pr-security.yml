@@ -1,0 +1,36 @@
+name: PR security gate
+on:
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  dependency-review:
+    name: dependency-review
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: moderate
+          fail-on-scopes: runtime, unknown
+  malware-guard:
+    name: malware-guard
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Reject obfuscated or executable additions
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --check "$BASE_SHA" "$HEAD_SHA"
+          forbidden=$(git diff --name-only --diff-filter=A "$BASE_SHA" "$HEAD_SHA" | grep -Eiv '(^|/)(docs?|fixtures?|examples?)/' | grep -Ei '\.(apk|bat|cmd|com|dll|dylib|exe|ipa|jar|msi|ps1|scr|so|vbs)$' || true)
+          if [ -n "$forbidden" ]; then echo "Blocked executable artifact(s):"; echo "$forbidden"; exit 1; fi
+          git diff --unified=0 "$BASE_SHA" "$HEAD_SHA" | grep '^+' | grep -v '^+++' > added-lines.txt || true
+          if grep -nP '[\x{202A}-\x{202E}\x{2066}-\x{2069}\x00-\x08\x0B\x0C\x0E-\x1F]' added-lines.txt; then echo 'Blocked hidden Unicode/control characters in added code.'; exit 1; fi
+          if grep -nEi '(curl|wget)[^\n|]*\|[[:space:]]*(ba)?sh|invoke-expression|iex[[:space:]]*\(|powershell[^\n]*-[[:space:]]*(enc|encodedcommand)|certutil[^\n]*(decode|urlcache)|frombase64string[[:space:]]*\(|base64[[:space:]]+(-d|--decode)|\beval[[:space:]]*\(|new[[:space:]]+function[[:space:]]*\(' added-lines.txt; then echo 'Blocked a high-risk execution or obfuscation pattern; split the change and obtain a maintainer security review.'; exit 1; fi
