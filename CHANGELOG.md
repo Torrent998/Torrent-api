@@ -1,5 +1,7 @@
 # Changelog
-## Unreleased
+## 0.1.0 - 2026-11-06 (Testnet prototype)
+- **Live on Stellar Testnet** against the deployed escrow and indexer: deposit and organizer flows signed, submitted and confirmed through the indexer. Hosted on Render's free plan.
+- Repository documentation rewritten for public review; internal planning notes removed; `docs.yml` checks required files and relative links.
 - CORS: `CORS_ALLOWED_ORIGINS` (exact, comma-separated origins; malformed or `*` fails at startup; unset = no headers). Preflight is answered `204` before authentication, `Authorization`, `Content-Type`, `Idempotency-Key` and `X-Request-Id` are allowed, credentials never. Needed so the hosted web app can call the hosted API. 9 tests.
 - Organizer signing requests: `POST /v1/circles/{id}/pool-intent` (create_pool, bound back by the indexed pool_created), `/rights-intent` (issue_right, refused up front when unbacked, owner not a member, maturity in the past or caller not the controller) and `/close-intent` (close_pool). New intent kinds `POOL_CREATE`, `RIGHT_ISSUE`, `POOL_CLOSE`; OpenAPI regenerated; 6 tests. Live script `scripts/testnet-e2e.ts` drives login, circle, pool binding, a prepared Soroban deposit and its confirmation against Testnet.
 - Targets torrent-escrow **ABI v2**: `TRANSFER_CANCEL` (`POST /v1/transfers/{id}/cancel`, proposer only, on-chain pending

@@ -1,6 +1,6 @@
 # ADR 0001 — API owns off-chain agreements and intents; the ledger owns money
 
-Status: accepted (M1/M2 slice). Sources: `docs/SRD.md` (endpoints, error schema, state machine, idempotency), `docs/ARCHITECTURE.md` (ownership), `docs/TECHNICAL_BUILD.md`. The canonical doc set is maintained in this repo and mirrored to siblings.
+Status: accepted (M1/M2 slice). Sources: the product notes in the git history (endpoints, error schema, state machine, idempotency), `docs/ARCHITECTURE.md` (ownership), the product notes in the git history. The canonical doc set is maintained in this repo and mirrored to siblings.
 
 ## Decisions
 1. **No custody, no keys.** The API returns an `InvocationDescriptor` (contract, function, typed args) inside a stateful intent. The user's wallet builds, prepares and signs the transaction. The API then *verifies* the signed XDR matches the descriptor exactly (contract, function, every argument, source account, valid signature, single operation) before forwarding. This is an interim split: there is no published contract SDK yet to own transaction building.
@@ -16,5 +16,5 @@ Status: accepted (M1/M2 slice). Sources: `docs/SRD.md` (endpoints, error schema,
 ## Not done (honest list)
 - **No PostgreSQL/Prisma/Redis/BullMQ.** Persistence is SQLite (`node:sqlite`) behind the `StatePersistence` interface (see 0002), and the reconcile loop is an in-process timer. No Postgres server was available to test against.
 - No KYC/eligibility service, notifications, key rotation, or data export.
-- `SorobanRpcSubmitter` and `HttpIndexerClient` have not run against a live Testnet (no deployment exists). The indexer client *is* contract-tested against the indexer's real recorded responses.
+- `SorobanRpcSubmitter` and `HttpIndexerClient` run against the live Testnet contract and indexer (deposit and organizer flows, see the README status table). The indexer client is also contract-tested against the indexer's real recorded responses.
 - Rate limiting is in-memory per process.

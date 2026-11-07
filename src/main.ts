@@ -18,7 +18,7 @@ const env = (k: string, d?: string): string => {
 
 const appEnv = env("APP_ENV", "development");
 const network = env("STELLAR_NETWORK", "testnet");
-if (network !== "testnet") throw new Error("MVP is Testnet-only; mainnet requires the go-live review in docs/PROJECT_MASTER.md");
+if (network !== "testnet") throw new Error("MVP is Testnet-only; mainnet requires the go-live review in docs/SECURITY.md");
 void appEnv; // wallet-signature login (AuthService) is the only authentication path
 // Exact browser origins allowed to call this API (e.g. https://torrent-web1.vercel.app). Unset = no CORS headers.
 // A malformed list throws here, at startup, instead of silently serving the wrong policy.
