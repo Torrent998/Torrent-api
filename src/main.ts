@@ -4,7 +4,7 @@
  * run against a live Testnet in this repository (no deployed contract exists yet).
  */
 import { createApp } from "./bootstrap.js";
-import { SorobanRpcSubmitter } from "./integrations/chain-submitter.js";
+import { DEFAULT_RPC_TIMEOUT_MS, SorobanRpcSubmitter } from "./integrations/chain-submitter.js";
 import { HttpIndexerClient } from "./integrations/indexer-client.js";
 import { parseAllowedOrigins } from "./http/cors.js";
 import { IntentService } from "./modules/intent.service.js";
@@ -39,7 +39,10 @@ const app = await createApp(
     clock: { now: () => new Date() },
     persistence: new SqlitePersistence(env("DATABASE_PATH", "data/torrent-api.db")),
     indexer: new HttpIndexerClient(env("INDEXER_BASE_URL", "http://localhost:3002")),
-    submitter: new SorobanRpcSubmitter(env("STELLAR_RPC_URL", "https://soroban-testnet.stellar.org")),
+    submitter: new SorobanRpcSubmitter(
+      env("STELLAR_RPC_URL", "https://soroban-testnet.stellar.org"),
+      Number(env("STELLAR_RPC_TIMEOUT_MS", String(DEFAULT_RPC_TIMEOUT_MS))),
+    ),
   },
   ["log", "warn", "error"],
   { cors: { allowedOrigins: allowedOrigins } },
